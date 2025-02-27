@@ -30,11 +30,10 @@ class Chat(commands.Cog):
 
 	@commands.command()
 	async def random(self, ctx):
-		guild = self.bot.get_guild(cfg.GUILD_ID)
 		voice = ctx.author.voice
 		channel = voice.channel
 		members = channel.members
-		members_names = [member.name for member in members]
+		members_names = [member.display_name for member in members]
 
 		random.shuffle(members_names)
 
