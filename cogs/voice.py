@@ -5,7 +5,7 @@ import config as cfg
 
 
 class Voice(commands.Cog):
-    def __init(self, bot):
+    def __init__(self, bot):
         self.bot = bot
 
     """
