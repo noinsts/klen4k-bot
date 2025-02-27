@@ -3,8 +3,6 @@ import os
 import discord
 from discord.ext import commands
 
-import config as cfg
-
 from dotenv import load_dotenv
 
 intents = discord.Intents.default()
@@ -16,7 +14,7 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix=".", intents=intents)
 
-cogs = ["cogs.voice"]
+cogs = ["cogs.voice", "cogs.chat"]
 
 
 @bot.event
