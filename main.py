@@ -14,7 +14,7 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix=".", intents=intents)
 
-cogs = ["cogs.voice", "cogs.chat"]
+cogs = ["cogs.voice", "cogs.chat", "cogs.roles"]
 
 
 @bot.event
