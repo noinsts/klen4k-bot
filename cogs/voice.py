@@ -41,5 +41,25 @@ class Voice(commands.Cog):
             await ctx.send(f"З войса **{channel.name}** було кікнуто **{kick.display_name}**, тому що так нада")
 
 
+    @commands.command()
+    async def private(self, ctx, member: discord.Member):
+        duo = ctx.guild.get_channel(cfg.DUO_ID)
+        lenovo = ctx.guild.get_channel(cfg.LENOVO_ID)
+
+        members_duo = duo.members
+        members_lenovo = lenovo.members
+
+        if len(members_duo) == 0:
+            await ctx.author.move_to(duo)
+            await member.move_to(duo)
+            await ctx.send(f'**{ctx.author}** та **{member}** відправленні до **{duo.name}**')
+        elif len(members_lenovo) == 0:
+            await ctx.author.move_to(lenovo)
+            await member.move_to(lenovo)
+            await ctx.send(f'**{ctx.author}** та **{member}** відправленні до **{lenovo.name}**')
+        else:
+            await ctx.send('Вільного канала не знайдено.')
+
+
 async def setup(bot):
     await bot.add_cog(Voice(bot))
