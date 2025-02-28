@@ -29,7 +29,7 @@ class Chat(commands.Cog):
 
 
 	@commands.command()
-	async def random(self, ctx):
+	async def teams_create(self, ctx):
 		voice = ctx.author.voice
 		channel = voice.channel
 		members = channel.members
@@ -51,6 +51,14 @@ class Chat(commands.Cog):
 			await ctx.send('Що використовувати цю команду потрібно щоб в войсі було 4 людини')
 		else:
 			await ctx.send(embed=embed)
+
+
+	@commands.command()
+	async def choice(self, ctx, ask: str):
+		answears = ["Так", "Ні", "Можливо"]
+		answear = random.choice(answears)
+
+		await ctx.send(f'{answear}, {ask}')
 
 
 async def setup(bot):
