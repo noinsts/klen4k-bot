@@ -61,5 +61,39 @@ class Voice(commands.Cog):
             await ctx.send('Вільного канала не знайдено.')
 
 
+    @commands.command()
+    async def vlock(self, ctx):
+        voice = ctx.author.voice
+
+        if voice is None:
+            await ctx.send('Щоб використовувати цю команду потрібно знаходитись у войсі')
+            return
+
+        channel = voice.channel
+
+        overwrites = channel.overwrites_for(ctx.guild.default_role)
+        overwrites.connect = False
+
+        await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites)
+        await ctx.send(f'Доступ до канала **{channel.name}** простим смертним заблоковано')
+
+
+    @commands.command()
+    async def vunlock(self, ctx):
+        voice = ctx.author.voice
+
+        if voice is None:
+            await ctx.send('Щоб використовувати цю команду потрібно знаходитись у войсі')
+            return
+
+        channel = voice.channel
+
+        overwrites = channel.overwrites_for(ctx.guild.default_role)
+        overwrites.connect = True
+
+        await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites)
+        await ctx.send(f'Доступ до канала **{channel.name}** простим смертним дозволено')
+
+
 async def setup(bot):
     await bot.add_cog(Voice(bot))
