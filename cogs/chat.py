@@ -29,31 +29,6 @@ class Chat(commands.Cog):
 
 
 	@commands.command()
-	async def teams_create(self, ctx):
-		voice = ctx.author.voice
-		channel = voice.channel
-		members = channel.members
-		members_names = [member.display_name for member in members]
-
-		random.shuffle(members_names)
-
-		team1 = members_names[:2]
-		team2 = members_names[2:]
-
-		embed = discord.Embed(title='Розподіл команд', color=discord.Color.red())
-
-		embed.add_field(name='Команда 1', value=f", \n".join(team1), inline=True)
-		embed.add_field(name='Команда 2', value=f", \n".join(team2), inline=True)
-
-		if not voice and not voice.channel:
-			await ctx.send('Щоб використовувати цю команду зайдіть в войс')
-		elif len(members) != 4:
-			await ctx.send('Що використовувати цю команду потрібно щоб в войсі було 4 людини')
-		else:
-			await ctx.send(embed=embed)
-
-
-	@commands.command()
 	async def choice(self, ctx, ask: str):
 		answears = ["Так", "Ні", "Можливо"]
 		answear = random.choice(answears)
@@ -64,7 +39,7 @@ class Chat(commands.Cog):
 	@commands.command(aliases=['кто', 'хто'])
 	async def who(self, ctx, reason: str):
 		 member = random.choice(ctx.guild.members)
-
+		 
 		 await ctx.send(f'**{member.mention}**, {reason}')
 
 
