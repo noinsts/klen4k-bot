@@ -38,9 +38,9 @@ class Chat(commands.Cog):
 
 	@commands.command(aliases=['кто', 'хто'])
 	async def who(self, ctx, reason: str):
-		 member = random.choice(ctx.guild.members)
+		member = random.choice(ctx.guild.members)
 		 
-		 await ctx.send(f'**{member.mention}**, {reason}')
+		await ctx.send(f'**{member.mention}**, {reason}')
 
 
 async def setup(bot):
