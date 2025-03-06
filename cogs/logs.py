@@ -26,6 +26,8 @@ class Logs(commands.Cog):
             else:
                 action = "перемістився в "
                 channel_name = after.channel.name
+        else:
+            return
 
 
         embed = discord.Embed(title='Новий лог',
