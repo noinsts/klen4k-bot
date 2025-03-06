@@ -26,7 +26,6 @@ class Voice(commands.Cog):
 
     @commands.command()
     async def roulette(self, ctx):
-        guild = self.bot.get_guild(cfg.GUILD_ID)
         voice = ctx.author.voice
         channel = voice.channel
         members = channel.members

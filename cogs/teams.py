@@ -1,3 +1,5 @@
+import random
+
 import discord
 from discord.ext import commands
 
@@ -49,12 +51,12 @@ class Teams(commands.Cog):
 
 	@commands.command()
 	async def clear_teams(self, ctx):
-	    for role_id in [cfg.TEAM_1_ID, cfg.TEAM_2_ID]:
-	        role = ctx.guild.get_role(role_id)
-	        if role:
-	            for member in role.members:
-	                await member.remove_roles(role)
-	    await ctx.send("Ролі команд очищено!")
+		for role_id in [cfg.TEAM_1_ID, cfg.TEAM_2_ID]:
+			role = ctx.guild.get_role(role_id)
+			if role:
+				for member in role.members:
+					await member.remove_roles(role)
+			await ctx.send("Ролі команд очищено!")
 
 
 	@commands.command()

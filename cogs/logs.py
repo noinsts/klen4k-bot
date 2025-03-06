@@ -24,7 +24,7 @@ class Logs(commands.Cog):
                 action = "вийшов з "
                 channel_name = before.channel.name
             else:
-                action = "перемістився в"
+                action = "перемістився в "
                 channel_name = after.channel.name
 
 
