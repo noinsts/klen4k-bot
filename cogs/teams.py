@@ -64,8 +64,8 @@ class Teams(commands.Cog):
 		team1_members = ctx.guild.get_role(cfg.TEAM_1_ID).members
 		team2_members = ctx.guild.get_role(cfg.TEAM_2_ID).members
 
-		team_A = ctx.guild.get_channel(cfg.TEAM_A_ID)
-		team_B = ctx.guild.get_channel(cfg.TEAM_B_ID)
+		team_A = ctx.guild.get_channel(cfg.TEAM_A_ID)  # войс команди 1
+		team_B = ctx.guild.get_channel(cfg.TEAM_B_ID)  # войс команди 2
 
 		for member in team1_members:
 			await member.move_to(team_A)
@@ -83,7 +83,7 @@ class Teams(commands.Cog):
 
 		all_team_members = team1_members + team2_members
 
-		full_stack = ctx.guild.get_channel(cfg.FULL_STACK_ID)
+		full_stack = ctx.guild.get_channel(cfg.FULL_STACK_ID)  # войс загального збору
 
 		for member in all_team_members:
 			await member.move_to(full_stack)

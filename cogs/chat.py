@@ -3,8 +3,6 @@ import random
 import discord
 from discord.ext import commands
 
-import config as cfg
-
 
 class Chat(commands.Cog):
 	def __init__(self, bot):
@@ -13,11 +11,10 @@ class Chat(commands.Cog):
 
 	@commands.command()
 	async def userinfo(self, ctx, member: discord.Member = None):
-		guild = self.bot.get_guild(cfg.GUILD_ID)
 		member = member or ctx.author
 
-		roles_name = [role.name for role in member.roles if role.name != '@everyone']
-		role_text = ",\n ".join(roles_name) if roles_name else "Немає ролей"
+		roles_name = [role.name for role in member.roles if role.name != '@everyone']  # пошук ролей користувача окрім '@everyone'
+		role_text = ",\n ".join(roles_name) if roles_name else "Немає ролей"  # красивий вивід ролей
 
 		embed = discord.Embed(title=f'Інформація про користувача {member.name}', color = discord.Color.blue())
 
@@ -31,9 +28,7 @@ class Chat(commands.Cog):
 	@commands.command()
 	async def choice(self, ctx, ask: str):
 		answears = ["Так", "Ні", "Можливо"]
-		answear = random.choice(answears)
-
-		await ctx.send(f'{answear}, {ask}')
+		await ctx.send(f'{random.choice(answears)}, {ask}')
 
 
 	@commands.command(aliases=['кто', 'хто'])

@@ -25,7 +25,7 @@ class Moderation(commands.Cog):
 
 	@commands.command()
 	@commands.has_permissions(administrator = True)
-	async def nickname(self, ctx, member: discord.Member, newnick: str = None):
+	async def nickname(self, ctx, member: discord.Member, newnick: str):
 		if newnick is None:
 			await member.edit(nick=None)
 			await ctx.send(f'Нікнейм скинуто для користувача **{member.display_name}**')
@@ -37,7 +37,7 @@ class Moderation(commands.Cog):
 
 	@commands.command()
 	@commands.has_permissions(administrator = True)
-	async def vacban(self, ctx, member: discord.Member, reason: str):
+	async def vacban(self, ctx, member: discord.Member, reason: str = None):
 		await member.ban(reason=reason)
 		await ctx.send(f'Користувач **{member.display_name}** був заблокований за причини **{reason}** користувачем {ctx.author.display_name}')
 
