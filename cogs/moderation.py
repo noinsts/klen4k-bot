@@ -42,6 +42,33 @@ class Moderation(commands.Cog):
 		await ctx.send(f'Користувач **{member.display_name}** був заблокований за причини **{reason}** користувачем {ctx.author.display_name}')
 
 
+	@commands.command()
+	@commands.has_permissions(administrator = True)
+	async def mute(self, ctx, member: discord.Member):
+		await member.edit(mute=True)
+		await ctx.send(f'Користувач **{member.display_name}** замучений у войсі')
+
+
+	@commands.command()
+	@commands.has_permissions(administrator = True)
+	async def unmute(self, ctx, member: discord.Member):
+		await member.edit(mute=False)
+		await ctx.send(f'Користувач **{member.display_name}** розмучений у войсі')
+
+
+	@commands.command()
+	@commands.has_permissions(administrator = True)
+	async def deafen(self, ctx, member: discord.Member):
+		await member.edit(deafen=True)
+		await ctx.send(f'Користувач **{member.display_name}** заглушений у войсі')
+
+
+	@commands.command()
+	@commands.has_permissions(administrator = True)
+	async def undeafen(self, ctx, member: discord.Member):
+		await member.edit(deafen=False)
+		await ctx.send(f'Користувач **{member.display_name}** розглушений у войсі')
+
+
 async def setup(bot):
 	await bot.add_cog(Moderation(bot))
-
