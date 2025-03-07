@@ -34,6 +34,14 @@ class Moderation(commands.Cog):
 			await ctx.send(f'Нік **{newnick}** для користувача **{member.display_name}** встановлено')
 
 
+
+	@commands.command()
+	@commands.has_permissions(administrator = True)
+	async def vacban(self, ctx, member: discord.Member, reason: str):
+		await member.ban(reason=reason)
+		await ctx.send(f'Користувач **{member.display_name}** був заблокований за причини **{reason}** користувачем {ctx.author.display_name}')
+
+
 async def setup(bot):
 	await bot.add_cog(Moderation(bot))
 
