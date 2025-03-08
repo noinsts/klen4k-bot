@@ -10,6 +10,7 @@ intents = discord.Intents.default()
 intents.guilds = True
 intents.voice_states = True
 intents.dm_messages = True
+intents.members = True
 intents.messages = True
 intents.message_content = True
 
