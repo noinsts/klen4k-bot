@@ -3,10 +3,46 @@ from discord.ext import commands
 
 import config as cfg
 
+from database import Database
+
 
 class Logs(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.db = Database()
+
+    """Запит дозволу відображати логи"""
+
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def set_log_visibility(self, ctx, action: str, allow: bool):
+        if action is None:
+            await ctx.send('Введіть дію')
+            return
+
+        if allow is None:
+            await ctx.send('Введіть значення')
+            return
+
+        self.db.set_log_visibility(action, allow)
+
+        await ctx.send(f'Успіх! **{action}** встановлено значення **{allow}**')
+
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def is_log_allowed(self, action: str):
+        pass
+
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def delete_log_action(self, action: str):
+        pass
+
+
+    """Логування"""
 
 
     @commands.Cog.listener()
@@ -35,7 +71,8 @@ class Logs(commands.Cog):
                               color = discord.Color.red()
         )
 
-        await log_channel.send(embed=embed)
+        if self.db.is_log_allowed("voice_logs"):
+            await log_channel.send(embed=embed)
 
 
 async def setup(bot):
