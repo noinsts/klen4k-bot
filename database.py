@@ -6,7 +6,8 @@ class Database:
         self.conn = sqlite3.connect(self.db_name)
         self.cursor = self.conn.cursor()
         self.create_tables()
-        self.add_logs()
+        self.add_default_logs()
+        self.add_default_taxes()
 
     def create_tables(self):
         self.cursor.execute(
@@ -26,7 +27,7 @@ class Database:
         self.cursor.execute(
             """CREATE TABLE IF NOT EXISTS taxes (
                 action TEXT PRIMARY KEY,
-                amount INTEGER
+                amount INTEGER DEFAULT 0
             )"""
         )
 
@@ -39,12 +40,23 @@ class Database:
 
         self.conn.commit()
 
-    def add_logs(self):
+    def add_default_logs(self):
         self.cursor.executemany(
             """INSERT INTO show_logs (action, allow)
                VALUES (?, ?)
                ON CONFLICT(action) DO NOTHING""",
             [("voice_logs", 0), ("tax_logs", 0)]
+        )
+
+        self.conn.commit()
+
+    def add_default_taxes(self):
+        self.cursor.executemany(
+            """INSERT INTO taxes (action, amount)
+            VALUES (?, ?)
+            ON CONFLICT(action) DO NOTHING""",
+            [("join_voice", 0), ("send_message", 0)]
+
         )
 
         self.conn.commit()
@@ -78,14 +90,25 @@ class Database:
     def update_balance(self, user_id, amount):
         self.cursor.execute("""
             INSERT INTO balance (user_id, balance) 
-            VALUES (?, ?) 
+            VALUES (?, COALESCE(?, 0)) 
             ON CONFLICT(user_id) DO UPDATE 
-            SET balance = balance + excluded.balance
+            SET balance = COALESCE(balance, 0) + excluded.balance
         """, (user_id, amount))
-        self.conn.commit()
+        self.conn.cursor()
 
     def set_taxes(self, action, amount):
-        pass
+        self.cursor.execute("""
+            INSERT INTO taxes (action, amount)
+            VALUES (?, ?)
+            ON CONFLICT(action) DO UPDATE
+            SET amount = excluded.amount
+        """, (action, amount))
+        self.conn.commit()
+
+    def amount_tax(self, action):
+        self.cursor.execute("SELECT amount FROM taxes WHERE action = ?", (action, ))
+        result = self.cursor.fetchone()
+        return result[0] if result else 0
 
     # Запити пов'язані з логуванням 🗒️
 
