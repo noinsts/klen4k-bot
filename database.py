@@ -8,6 +8,7 @@ class Database:
         self.create_tables()
         self.add_default_logs()
         self.add_default_taxes()
+        self.fix_null()
 
     def create_tables(self):
         self.cursor.execute(
@@ -61,6 +62,14 @@ class Database:
 
         self.conn.commit()
 
+    def fix_null(self):  # замінює значення 'null' в балансах на 0
+        self.cursor.execute("""
+            UPDATE balance
+            SET balance = 0
+            WHERE balance IS NULL;
+        """)
+        self.conn.commit()
+
     # Запити пов'язані з днями народження 🎂
     def add_birthday(self, user_id, birthday):
         self.cursor.execute("INSERT OR REPLACE INTO birthdays VALUES (?, ?)", (user_id, birthday))
@@ -94,7 +103,12 @@ class Database:
             ON CONFLICT(user_id) DO UPDATE 
             SET balance = COALESCE(balance, 0) + excluded.balance
         """, (user_id, amount))
-        self.conn.cursor()
+        self.conn.commit()
+
+    def get_balance(self, user_id):
+        self.cursor.execute("SELECT balance FROM balance WHERE user_id = ?", (user_id, ))
+        result = self.cursor.fetchone()
+        return result[0] if result else 0
 
     def set_taxes(self, action, amount):
         self.cursor.execute("""

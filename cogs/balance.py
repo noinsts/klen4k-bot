@@ -28,11 +28,13 @@ class Balance(commands.Cog):
             await ctx.send(f'Баланс користувача **{member.display_name}** зменшено на **{-amount}** 💸')
 
     @commands.command()
-    async def balance(self, ctx):
-        member = ctx.author
-        pass
-
-        """SHOW YOUR BALANCE"""
+    async def balance(self, ctx, member: discord.Member = None):
+        if not member:
+            balance = self.db.get_balance(ctx.author.id)
+            await ctx.send(f'Ваш баланс **{balance}** гривень 💸')
+        else:
+            balance = self.db.get_balance(member.id)
+            await ctx.send(f'Баланс користувача **{member.display_name}** **{balance}** гривень 💸')
 
 
     @commands.Cog.listener()
@@ -56,8 +58,6 @@ class Balance(commands.Cog):
                         color=discord.Color.red()
                     )
                     await log_channel.send(embed=embed)
-                else:
-                    print('Log channel is not found')
 
 
     @commands.command()
