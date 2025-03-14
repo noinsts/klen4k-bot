@@ -21,7 +21,8 @@ class Database:
         self.cursor.execute(
             """CREATE TABLE IF NOT EXISTS balance (
                 user_id INTEGER PRIMARY KEY,
-                balance INTEGER DEFAULT 0 
+                balance INTEGER DEFAULT 0,
+                privacy INTEGER DEFAULT 0 
             )"""
         )
 
@@ -130,6 +131,17 @@ class Database:
         self.cursor.execute("SELECT amount FROM taxes WHERE action = ?", (action, ))
         result = self.cursor.fetchone()
         return result[0] if result else 0
+
+    def balance_tier_list(self):
+        self.cursor.execute("SELECT user_id, balance FROM balance WHERE privacy = ? ORDER BY balance DESC", (False, ))
+        result = self.cursor.fetchall()
+        return result
+    
+    def clear_balances(self):
+        self.cursor.execute("DELETE FROM balance")
+        self.conn.commit()
+        self.cursor.execute("VACUUM")
+        self.conn.commit()
 
     # Запити пов'язані з логуванням 🗒️
 
