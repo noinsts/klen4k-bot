@@ -39,6 +39,13 @@ class Database:
             )"""
         )
 
+        self.cursor.execute(
+            """CREATE TABLE IF NOT EXISTS taxes_state(
+                id INTEGER PRIMARY KEY CHECK (id = 1), -- Єдиний запис у таблиці
+                enabled INTEGER NOT NULL CHECK (enabled IN (0, 1))
+            )"""
+        )
+
         self.conn.commit()
 
     def add_default_logs(self):
@@ -143,6 +150,23 @@ class Database:
 
     def delete_log_action(self, action: str):
         self.cursor.execute("DELETE FROM show_logs WHERE action = ?", (action,))
+        self.conn.commit()
+
+    # Запити пов'язані з податками
+
+    def get_tax_state(self):
+        self.cursor.execute("SELECT enabled FROM taxes_state LIMIT 1")
+        result = self.cursor.fetchone()
+
+        if result is None:
+            self.cursor.execute("INSERT INTO taxes_state (enabled) VALUES (0)")
+            self.conn.commit()
+            return 0
+
+        return result[0]
+
+    def set_tax_state(self, state: int):
+        self.cursor.execute("UPDATE taxes_state SET enabled = ? WHERE id = 1", (state,))
         self.conn.commit()
 
     def close(self):

@@ -17,11 +17,11 @@ class Logs(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def set_log_visibility(self, ctx, action: str, allow: bool):
-        if action is None:
+        if not action:
             await ctx.send('Введіть дію')
             return
 
-        if allow is None:
+        if not allow:
             await ctx.send('Введіть значення')
             return
 
