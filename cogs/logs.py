@@ -32,14 +32,23 @@ class Logs(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def is_log_allowed(self, action: str):
-        pass
+    async def is_log_allowed(self, ctx, action: str):
+        if not action:
+            await ctx.send('Помилка, введіть дію')
+            return
+
+        await ctx.send(f'**{self.db.is_log_allowed(action)}**')
 
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def delete_log_action(self, action: str):
-        pass
+    async def delete_log_action(self, ctx, action: str):
+        if not action:
+            await ctx.send('Помилка, введіть дію')
+            return
+
+        self.db.delete_log_action(action)
+        await ctx.send(f'Успіх! {action} видалено')
 
 
     """Логування"""
@@ -53,10 +62,10 @@ class Logs(commands.Cog):
             print('Log channel is not found')
 
         if before.channel != after.channel:
-            if before.channel is None:
+            if not before.channel:
                 action = "зайшов у "
                 channel_name = after.channel.name
-            elif after.channel is None:
+            elif not after.channel:
                 action = "вийшов з "
                 channel_name = before.channel.name
             else:
