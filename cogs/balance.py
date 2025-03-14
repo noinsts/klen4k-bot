@@ -74,8 +74,14 @@ class Balance(commands.Cog):
         
         self.db.clear_balances()
 
-        await ctx.send('Ви дивна людина! Бази знеслись')
+        await ctx.send('**BALANCES DATABASE IS CLEAR**')
 
+
+    @commands.command()
+    async def balance_privacy(self, ctx):
+        state = 1 if not self.db.get_balance_privacy(ctx.author.id) else 0
+        self.db.set_balance_privacy(state, ctx.author.id)
+        await ctx.send(f'Статус приватності балансу змінено на **{bool(state)}**')
 
 async def setup(bot):
     await bot.add_cog(Balance(bot))

@@ -143,6 +143,27 @@ class Database:
         self.cursor.execute("VACUUM")
         self.conn.commit()
 
+    def set_balance_privacy(self, state, user_id):
+        self.cursor.execute("""
+            INSERT INTO balance (user_id, privacy) 
+            VALUES (?, ?) 
+            ON CONFLICT(user_id) DO UPDATE SET privacy = excluded.privacy
+        """, (user_id, state))
+        self.conn.commit()
+
+    def get_balance_privacy(self, user_id):
+        self.cursor.execute("SELECT privacy FROM balance WHERE user_id = ?", (user_id,))
+        result = self.cursor.fetchone()
+
+        if not result:
+            state = 0
+            self.cursor.execute("INSERT INTO balance (user_id, privacy) VALUES (?, ?)", (user_id, state))
+            self.conn.commit()
+            return state
+
+        return result[0]
+
+
     # Запити пов'язані з логуванням 🗒️
 
     def set_log_visibility(self, action: str, allow: bool):
@@ -170,7 +191,7 @@ class Database:
         self.cursor.execute("SELECT enabled FROM taxes_state LIMIT 1")
         result = self.cursor.fetchone()
 
-        if result is None:
+        if not result:
             self.cursor.execute("INSERT INTO taxes_state (enabled) VALUES (0)")
             self.conn.commit()
             return 0
