@@ -114,9 +114,16 @@ class Database:
         self.conn.commit()
 
     def get_balance(self, user_id):
-        self.cursor.execute("SELECT balance FROM balance WHERE user_id = ?", (user_id, ))
+        self.cursor.execute("SELECT balance FROM balance WHERE user_id = ?", (user_id,))
         result = self.cursor.fetchone()
-        return result[0] if result else 0
+
+        if not result:
+            self.cursor.execute("INSERT INTO balance (user_id, balance, privacy) VALUES (?, ?, ?)", (user_id, 0, 0))
+            self.conn.commit()
+            return 0
+
+        return result[0]
+
 
     def set_taxes(self, action, amount):
         self.cursor.execute("""
@@ -156,13 +163,11 @@ class Database:
         result = self.cursor.fetchone()
 
         if not result:
-            state = 0
-            self.cursor.execute("INSERT INTO balance (user_id, privacy) VALUES (?, ?)", (user_id, state))
+            self.cursor.execute("INSERT INTO balance (user_id, balance, privacy) VALUES (?, ?, ?)", (user_id, 0, 0))
             self.conn.commit()
-            return state
+            return 0
 
         return result[0]
-
 
     # Запити пов'язані з логуванням 🗒️
 

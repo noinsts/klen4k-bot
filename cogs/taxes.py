@@ -26,6 +26,11 @@ class Taxes(commands.Cog):
         self.db.set_taxes(action, amount)
         await ctx.send('Податок змінено')
 
+    @commands.command()
+    async def taxes(self, ctx):
+        pass
+    # show available taxes on embed
+
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):

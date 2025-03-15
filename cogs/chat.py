@@ -3,10 +3,12 @@ import random
 import discord
 from discord.ext import commands
 
+from database import Database
 
 class Chat(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		self.db = Database()
 
 
 	@commands.command()
@@ -18,9 +20,15 @@ class Chat(commands.Cog):
 
 		embed = discord.Embed(title=f'Інформація про користувача {member.name}', color = discord.Color.blue())
 
-		embed.add_field(name="Ім'я користувача", value=member.name, inline=True)
-		embed.add_field(name='ID користувача', value=member.id, inline=True)
-		embed.add_field(name='Ролі користувача', value=role_text, inline=True)
+		embed.add_field(name="Ім'я користувача", value=member.name, inline=False)
+		embed.add_field(name='ID користувача', value=member.id, inline=False)
+		embed.add_field(name='Ролі користувача', value=role_text, inline=False)
+
+		balance = self.db.get_balance(member.id)
+		privacy = self.db.get_balance_privacy(member.id)
+
+		if balance and not privacy:
+			embed.add_field(name='Баланс користувача', value=balance, inline=False)
 
 		await ctx.send(embed=embed)
 
