@@ -23,7 +23,7 @@ bot = commands.Bot(command_prefix=".", intents=intents)
 cogs = [
     "cogs.voice", "cogs.chat", "cogs.roles", "cogs.moderation",
     "cogs.steam", "cogs.teams", "cogs.logs", "cogs.cal", 
-    "cogs.birthdays", "cogs.balance", "cogs.taxes"
+    "cogs.birthdays", "cogs.balance", "cogs.taxes", "cogs.weather"
 ]
 
 @bot.event

@@ -18,7 +18,8 @@ class Calendar(commands.Cog):
             else:
                 cal = f'```{calendar.month(year, month)}```'
         elif mode == 'year':
-            cal = f'```{calendar.calendar(year)}```'
+            await ctx.send('Помилка, **year** поки що не доступний')
+            return
         else:
             await ctx.send('Правильно введи значення: .calendar month/year, year (int), month (int)')
             return
