@@ -57,7 +57,6 @@ class Weather(commands.Cog):
                 "overcast clouds": ("Хмарно ☁️", 0xA9A9A9)  # Темно-сірий для хмарності
             }
 
-            # Використання словника
             translate_desc, embed_color = weather_descriptions.get(desc, (desc, discord.Color.blue()))
 
             embed = discord.Embed(title=f'Прогноз погоди в {city}, {country}', color=embed_color)

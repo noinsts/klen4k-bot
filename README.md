@@ -20,8 +20,17 @@ pip install -r requirements.txt
 Створіть файл `.env` у кореневій директорії та додайте наступне:
 ```ini
 TOKEN=Ваш_токен_бота
+API_KEY=Ваш_токен_стім_АПІ
+PASSWORD=Пароль
+WEATHER_API=Ваш_openweather_ключ
 ```
 Замініть `Ваш_токен_бота` на ваш реальний токен бота з [Discord Developer Portal](https://discord.com/developers/applications).
+
+Замість `Ваш_токен_стім_АПІ` на ваш реальний токен з [Steam](https://steamcommunity.com/dev/apikey).
+
+Замість `Пароль` придумайте пароль для видалення бд балансів користувачів (вводити в лапках, int або float)
+
+Замість `Ваш_openweather_ключ` на ваш реальний токен з [OpenWeather](https://openweathermap.org/).
 
 ### 4️⃣ Запуск бота
 ```bash
