@@ -192,6 +192,11 @@ class Database:
 
     # Запити пов'язані з податками
 
+    def get_taxes(self):
+        self.cursor.execute("SELECT action, amount FROM taxes")
+        result = self.cursor.fetchall()
+        return result
+
     def get_tax_state(self):
         self.cursor.execute("SELECT enabled FROM taxes_state LIMIT 1")
         result = self.cursor.fetchone()

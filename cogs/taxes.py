@@ -28,8 +28,24 @@ class Taxes(commands.Cog):
 
     @commands.command()
     async def taxes(self, ctx):
-        pass
-    # show available taxes on embed
+        taxes = self.db.get_taxes()
+        allow = self.db.get_tax_state()
+
+        if not taxes:
+            await ctx.send('Немає категорій податків')
+            return
+        
+        embed = discord.Embed(title='Податки', color=16777215)
+
+        if allow:
+            embed.add_field(name='**⚠️ Статус**', value='**Наразі податки ввімкнено**', inline=False)
+        else:
+            embed.add_field(name='**⚠️ Статус**', value='**Наразі податки вимкнено**')
+
+        for name, amount in taxes:
+            embed.add_field(name=name, value=f'{amount} ', inline=False)
+
+        await ctx.send(embed=embed)
 
 
     @commands.Cog.listener()
@@ -38,7 +54,7 @@ class Taxes(commands.Cog):
             if self.db.get_tax_state():
                 tax = self.db.amount_tax("join_voice")  # змінено на "join_voice"
 
-                if tax is None:
+                if not tax:
                     print("Помилка: податок для 'join_voice' не знайдено в БД!")
                     return
 
