@@ -20,15 +20,21 @@ class Chat(commands.Cog):
 
 		embed = discord.Embed(title=f'Інформація про користувача {member.name}', color = discord.Color.blue())
 
-		embed.add_field(name="Ім'я користувача", value=member.name, inline=False)
-		embed.add_field(name='ID користувача', value=member.id, inline=False)
-		embed.add_field(name='Ролі користувача', value=role_text, inline=False)
+		embed.add_field(name="👨🏻 Ім'я користувача", value=member.name, inline=False)
+		embed.add_field(name='🤖 ID користувача', value=member.id, inline=False)
+		embed.add_field(name='🎭 Ролі користувача', value=role_text, inline=False)
 
 		balance = self.db.get_balance(member.id)
 		privacy = self.db.get_balance_privacy(member.id)
 
 		if balance and not privacy:
-			embed.add_field(name='Баланс користувача', value=balance, inline=False)
+			embed.add_field(name='💸 Баланс користувача', value=f"⚠️ Заборгованість: {-balance} UAH" if balance < 0 else f"{balance} UAH", inline=False)
+
+		city = self.db.get_city(member.id)
+		country = self.db.get_country(member.id)
+
+		if city and country:
+			embed.add_field(name='🗺️ Місцезнаходження', value=f'{city}, {country}', inline=False)
 
 		await ctx.send(embed=embed)
 

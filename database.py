@@ -48,9 +48,12 @@ class Database:
         )
 
         self.cursor.execute(
-            """CREATE TABLE IF NOT EXISTS members_cities(
-                user_id INTEGER PRIMARY KEY,
-                city TEXT
+            """CREATE TABLE IF NOT EXISTS locations(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                city TEXT NOT NULL,
+                country TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )"""
         )
 
@@ -60,7 +63,7 @@ class Database:
                 user_id INTEGER NOT NULL,
                 weather_type TEXT CHECK (weather_type IN ('positive', 'negative')),
                 activity TEXT NOT NULL,
-                FOREIGN KEY (user_id) REFERENCES members_cities(user_id) ON DELETE CASCADE
+                FOREIGN KEY (user_id) REFERENCES locations(user_id) ON DELETE CASCADE
             )"""
         )
 
@@ -229,23 +232,29 @@ class Database:
         self.cursor.execute("UPDATE taxes_state SET enabled = ? WHERE id = 1", (state,))
         self.conn.commit()
 
-    # Запити пов'язані з погодою ☀️
+    # Запити пов'язані з локацією ☀️
 
-    def add_city(self, user_id, city):
-        self.cursor.execute("INSERT INTO members_cities (user_id, city) VALUES (?, ?)", (user_id, city))
+    def add_location(self, user_id, city, country):
+        self.cursor.execute("INSERT INTO locations (user_id, city, country) VALUES (?, ?, ?)", (user_id, city, country))
         self.conn.commit()
 
-    def edit_city(self, user_id, city):
-        self.cursor.execute("UPDATE members_cities SET city = ? WHERE user_id = ?", (city, user_id))
+    def edit_location(self, user_id, city, country):
+        self.cursor.execute("UPDATE locations SET city = ?, country = ? WHERE user_id = ?", (city, country, user_id))
         self.conn.commit()
 
-    def delete_city(self, user_id):
-        self.cursor.execute("DELETE FROM members_cities WHERE user_id = ?", (user_id, ))
+    def delete_location(self, user_id):
+        self.cursor.execute("DELETE FROM locations WHERE user_id = ?", (user_id, ))
         self.conn.commit()
 
     def get_city(self, user_id):
-        self.cursor.execute("SELECT city FROM members_cities WHERE user_id = ?", (user_id, ))
-        return self.cursor.fetchone()  
+        self.cursor.execute("SELECT city FROM locations WHERE user_id = ?", (user_id, ))
+        result = self.cursor.fetchone()
+        return result[0] if result else None
+    
+    def get_country(self, user_id):
+        self.cursor.execute("SELECT country FROM locations WHERE user_id = ?", (user_id, ))
+        result = self.cursor.fetchone()
+        return result[0] if result else None
 
     # Запити пов'язані з персоналізованими погодними порадами 🔮               
 

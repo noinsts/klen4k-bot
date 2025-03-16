@@ -121,31 +121,39 @@ class Weather(commands.Cog):
             return
         
 
-    @commands.command(aliases=['addcity'])
-    async def setcity(self, ctx, city: str):
+    @commands.command(aliases=['add_location'])
+    async def set_location(self, ctx, city: str, country: str):
         if not city:
             await ctx.send('Помилка! Ви не вказали місто.')
+            return
+        
+        if not country:
+            await ctx.send('Помилка! Ви не вказали країну')
             return
         
         if self.db.get_city(ctx.author.id):
-            await ctx.send('Помилка! Місто вже додане')
+            await ctx.send('Помилка! Данні про місто та країну вже додані')
         else:
-            self.db.add_city(ctx.author.id, city)
-            await ctx.send(f"Успіх! Ваше місто {city} додано до бд.")
+            self.db.add_location(ctx.author.id, city, country)
+            await ctx.send(f"Успіх! Вашу локацію **{city}** та **{country}** додано до бд.")
 
     @commands.command()
-    async def changecity(self, ctx, city: str):
+    async def change_location(self, ctx, city: str, country: str):
         if not city:
             await ctx.send('Помилка! Ви не вказали місто.')
             return
-        
-        self.db.edit_city(ctx.author.id, city)
-        await ctx.send('Успіх! Ви змінили назву вашого міста в бд.')
 
-    @commands.command()
-    async def delcity(self, ctx):
-        self.db.delete_city(ctx.author.id)
-        await ctx.send('Успіх! Ви видалили ваше місто з бд.')
+        if not country:
+            await ctx.send('Помилка! Ви не вказали країну')
+            return
+        
+        self.db.edit_location(ctx.author.id, city, country)
+        await ctx.send('Успіх! Ви змінили назву ваших міста та країни в бд.')
+
+    @commands.command(alises=['delete_location'])
+    async def del_location(self, ctx):
+        self.db.delete_location(ctx.author.id)
+        await ctx.send('Успіх! Ви видалили вашу локацію з бд.')
 
     def find_weather_type(self, city):
         base_url = 'http://api.openweathermap.org/data/2.5/weather'
@@ -191,7 +199,7 @@ class Weather(commands.Cog):
         activities = self.db.find_advice(ctx.author.id, weather)
 
         if not city:
-            await ctx.send('Ви не вказали місто, спробуйте **.addcity**')
+            await ctx.send('Ви не вказали місто, спробуйте **.add_location**')
 
         if not activities:
             await ctx.send('Немає персоналізованих активностей. Ви можете їх додати, використовуючи **.add_weather_advice**.')
