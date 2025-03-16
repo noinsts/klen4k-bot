@@ -47,6 +47,23 @@ class Database:
             )"""
         )
 
+        self.cursor.execute(
+            """CREATE TABLE IF NOT EXISTS members_cities(
+                user_id INTEGER PRIMARY KEY,
+                city TEXT
+            )"""
+        )
+
+        self.cursor.execute(
+            """CREATE TABLE IF NOT EXISTS weather_preferences(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                weather_type TEXT CHECK (weather_type IN ('positive', 'negavite')),
+                activity TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES membes_cities(user_id) ON DELETE CASCADE
+            )"""
+        )
+
         self.conn.commit()
 
     def add_default_logs(self):
@@ -211,6 +228,23 @@ class Database:
     def set_tax_state(self, state: int):
         self.cursor.execute("UPDATE taxes_state SET enabled = ? WHERE id = 1", (state,))
         self.conn.commit()
+
+    # Запити пов'язані з погодою ☀️
+
+    def add_city(self, user_id, city):
+        self.cursor.execute("INSERT INTO members_cities (user_id, city) VALUES (?, ?)", (user_id, city))
+        self.conn.commit()
+
+    def edit_city(self, user_id, city):
+        self.cursor.execute("UPDATE members_cities SET city = ? WHERE user_id = ?", (city, user_id))
+        self.conn.commit()
+
+    def delete_city(self, user_id):
+        self.cursor.execute("DELETE FROM members_cities WHERE user_id = ?", (user_id, ))
+        self.conn.commit()
+
+    def find_weather_preferences(self, user_id, weather):
+        pass
 
     def close(self):
         self.conn.close()

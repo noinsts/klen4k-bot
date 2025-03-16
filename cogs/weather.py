@@ -7,10 +7,13 @@ from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 
+from database import Database
+
 
 class Weather(commands.Cog):
     def __init__(self, bot):
         self.bot = bot 
+        self.db = Database()
 
     def api_key(self):
         load_dotenv()
@@ -69,6 +72,37 @@ class Weather(commands.Cog):
         else:
             await ctx.send("Помилка, невдалося встановити підключення з сервером")
             return
+        
+
+    @commands.command()
+    async def setcity(self, ctx, city: str):
+        if not city:
+            await ctx.send('Помилка! Ви не вказали місто.')
+            return
+
+        self.db.add_city(ctx.author.id, city)
+        await ctx.send("Успіх! Ваше місто додано до бд.")
+
+    @commands.command()
+    async def chanchangecity(self, ctx, city: str):
+        if not city:
+            await ctx.send('Помилка! Ви не вказали місто.')
+            return
+        
+        self.db.edit_city(ctx.author.id, city)
+        await ctx.send('Успіх! Ви змінили назву вашого міста в бд.')
+
+    @commands.command()
+    async def delcity(self, ctx):
+        self.db.delete_city(ctx.author.id)
+        await ctx.send('Успіх! Ви видалили ваше місто з бд.')
+
+    def find_weather_type(self, city):
+        pass
+        
+    @commands.command()
+    async def weather_preferences(self, ctx):
+        pass
 
 
 async def setup(bot):
