@@ -1,8 +1,10 @@
 import os
-
+import random
 import requests
 
 from dotenv import load_dotenv
+
+from datetime import datetime
 
 import discord
 from discord.ext import commands
@@ -19,13 +21,17 @@ class Weather(commands.Cog):
         load_dotenv()
         return os.getenv('WEATHER_API')
 
-    
+
     @commands.command()
-    async def weather(self, ctx, city: str):
+    async def weather(self, ctx, city: str = None):
         if not city:
-            await ctx.send('Введіть назву міста')
-            return
-        
+            saved_city = self.db.get_city(ctx.author.id)
+            if saved_city:
+                city = saved_city
+            else:
+                await ctx.send('Введіть назву міста')
+                return
+
         base_url = 'http://api.openweathermap.org/data/2.5/weather'
         api_key = self.api_key()
 
@@ -45,6 +51,9 @@ class Weather(commands.Cog):
             desc = data['weather'][0]['description']
             city = data['name']
             country = f':flag_{data['sys']['country'].lower()}:'
+            timezone_offset = data["timezone"]  # Часовий пояс у секундах
+            sunrise = datetime.utcfromtimestamp(data["sys"]["sunrise"] + timezone_offset).strftime('%H:%M:%S')
+            sunset = datetime.utcfromtimestamp(data["sys"]["sunset"] + timezone_offset).strftime('%H:%M:%S')
 
 
             weather_descriptions = {
@@ -60,13 +69,51 @@ class Weather(commands.Cog):
                 "overcast clouds": ("Хмарно ☁️", 0xA9A9A9)  # Темно-сірий для хмарності
             }
 
+            weather_messages = {
+                "clear sky": [
+                    "Сонце світить, пташки співають! Час для прогулянки! 🌞",
+                    "Чисте небо – ідеальний день для активностей! 🚴‍♂️",
+                    "Окуляри не забудь 😎"
+                ],
+                "few clouds": [
+                    "Трохи хмар, але загалом чудово! 🌤️",
+                    "Сонце визирає – гарний день для кави на вулиці ☕",
+                    "Кілька хмаринок не завадять гарному настрою!"
+                ],
+                "rain": [
+                    "Дощить? Саме час для гарячого чаю і фільму! 🎬☕",
+                    "Якщо виходиш – не забудь парасольку! ☂️",
+                    "Парасолька головний аксесуар дня!"
+                ],
+                "snow": [
+                    "Сніг летить? Вийди і зліпи сніговика! ⛄",
+                    "Ідеальний момент для гарячого шоколаду ☕",
+                    "Нарешті справжня зима! ❄️"
+                ],
+                "thunderstorm": [
+                    "Гримить і блискає! Тримайся подалі від відкритих місць! ⚡",
+                    "Якщо чуєш гуркіт – це не сабвуфер сусіда! 😆",
+                    "Гроза – найкращий час для атмосфери і свічок 🕯️"
+                    
+                ],
+                "overcast clouds": [
+                    "Сіренько, але без дощу. Саме час для кави ☕", 
+                    "Може здатися похмуро, але це не привід сидіти вдома!"
+                ]
+            }
+
             translate_desc, embed_color = weather_descriptions.get(desc, (desc, discord.Color.blue()))
+
+            advice = random.choice(weather_messages.get(desc, ["Немає особливих рекомендацій 🤷"]))
 
             embed = discord.Embed(title=f'Прогноз погоди в {city}, {country}', color=embed_color)
 
             embed.add_field(name='Температура', value=f'{temp}°C', inline=False)
             embed.add_field(name='Вологість', value=f'{humid}%', inline=False)
             embed.add_field(name='Опис', value=translate_desc, inline=False)
+            embed.add_field(name='🌄 Схід сонця', value=sunrise, inline=True)
+            embed.add_field(name='🌇 Захід сонця', value=sunset, inline=True)
+            embed.add_field(name='🔮 Порада', value=advice, inline=False)
 
             await ctx.send(embed=embed)
         else:
@@ -74,17 +121,20 @@ class Weather(commands.Cog):
             return
         
 
-    @commands.command()
+    @commands.command(aliases=['addcity'])
     async def setcity(self, ctx, city: str):
         if not city:
             await ctx.send('Помилка! Ви не вказали місто.')
             return
-
-        self.db.add_city(ctx.author.id, city)
-        await ctx.send("Успіх! Ваше місто додано до бд.")
+        
+        if self.db.get_city(ctx.author.id):
+            await ctx.send('Помилка! Місто вже додане')
+        else:
+            self.db.add_city(ctx.author.id, city)
+            await ctx.send(f"Успіх! Ваше місто {city} додано до бд.")
 
     @commands.command()
-    async def chanchangecity(self, ctx, city: str):
+    async def changecity(self, ctx, city: str):
         if not city:
             await ctx.send('Помилка! Ви не вказали місто.')
             return
@@ -98,12 +148,69 @@ class Weather(commands.Cog):
         await ctx.send('Успіх! Ви видалили ваше місто з бд.')
 
     def find_weather_type(self, city):
-        pass
-        
-    @commands.command()
-    async def weather_preferences(self, ctx):
-        pass
+        base_url = 'http://api.openweathermap.org/data/2.5/weather'
+        api_key = self.api_key()
 
+        params = {
+            "q" : city,
+            "appid" : api_key
+        }
+
+        response = requests.get(base_url, params=params)
+
+        if response.status_code == 200:
+            data = response.json()
+
+            type = data['weather'][0]['description']
+
+            POSITIVE_WEATHER = {"clear sky", "few clouds", "scattered clouds", "broken clouds", "mist"}
+            NEGATIVE_WEATHER = {"overcast clouds", "drizzle", "rain", "thunderstorm", "snow", "haze", 
+                                "fog", "sand", "dust", "ash", "squall", "tornado"}
+            
+            if type in POSITIVE_WEATHER:
+                return 'positive'
+            elif type in NEGATIVE_WEATHER:
+                return 'negative'
+            else:
+                return 'neutral'
+
+
+    @commands.command()
+    async def add_weather_advice(self, ctx, weather_type: str, *, activity: str): 
+        if weather_type not in ['positive', 'negative']:
+            await ctx.send('Помилка! Використовуйте **positive** або **negative**')
+            return
+        
+        self.db.add_advice(ctx.author.id, weather_type, activity)
+        await ctx.send('Успіх! Ваші персоналізовані поради додано.')
+
+    @commands.command()
+    async def personalize_advice(self, ctx):
+        city = self.db.get_city(ctx.author.id)
+        weather = self.find_weather_type(city)
+        activities = self.db.find_advice(ctx.author.id, weather)
+
+        if not city:
+            await ctx.send('Ви не вказали місто, спробуйте **.addcity**')
+
+        if not activities:
+            await ctx.send('Немає персоналізованих активностей. Ви можете їх додати, використовуючи **.add_weather_advice**.')
+            return
+
+        if weather == 'positive':
+            emoji = '🌄'
+            color = discord.Color.orange()
+        else:
+            emoji = '🌙'
+            color = discord.Color.blue()
+
+        embed = discord.Embed(
+            title=f'𝒀𝒐𝒖𝒓 𝒑𝒆𝒓𝒔𝒐𝒏𝒂𝒍𝒊𝒛𝒆 𝒂𝒅𝒗𝒊𝒄𝒆 {emoji}', 
+            description=random.choice(activities)[0],
+            color=color
+        )
+
+        await ctx.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Weather(bot))

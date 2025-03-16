@@ -58,9 +58,9 @@ class Database:
             """CREATE TABLE IF NOT EXISTS weather_preferences(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
-                weather_type TEXT CHECK (weather_type IN ('positive', 'negavite')),
+                weather_type TEXT CHECK (weather_type IN ('positive', 'negative')),
                 activity TEXT NOT NULL,
-                FOREIGN KEY (user_id) REFERENCES membes_cities(user_id) ON DELETE CASCADE
+                FOREIGN KEY (user_id) REFERENCES members_cities(user_id) ON DELETE CASCADE
             )"""
         )
 
@@ -243,8 +243,20 @@ class Database:
         self.cursor.execute("DELETE FROM members_cities WHERE user_id = ?", (user_id, ))
         self.conn.commit()
 
-    def find_weather_preferences(self, user_id, weather):
-        pass
+    def get_city(self, user_id):
+        self.cursor.execute("SELECT city FROM members_cities WHERE user_id = ?", (user_id, ))
+        return self.cursor.fetchone()  
+
+    # Запити пов'язані з персоналізованими погодними порадами 🔮               
+
+    def add_advice(self, user_id, weather_type, activity):
+        self.cursor.execute("INSERT INTO weather_preferences (user_id, weather_type, activity) VALUES (?, ?, ?)",
+                            (user_id, weather_type, activity))
+        self.conn.commit()
+
+    def find_advice(self, user_id, weather):
+        self.cursor.execute("SELECT activity FROM weather_preferences WHERE user_id = ? AND weather_type = ?", (user_id, weather))
+        return self.cursor.fetchall()
 
     def close(self):
         self.conn.close()
