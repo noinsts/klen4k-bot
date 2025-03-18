@@ -1,4 +1,5 @@
 import sqlite3
+import re
 
 class Database:
     def __init__(self, db_name="database.db"):
@@ -72,6 +73,13 @@ class Database:
                 user_id INTEGER PRIMARY KEY, 
                 brand TEXT NOT NULL,
                 model TEXT NOT NULL
+            )"""
+        )
+
+        self.cursor.execute(
+            """CREATE TABLE IF NOT EXISTS colors(
+                user_id INTEGER PRIMARY KEY, 
+                color TEXT NOT NULL
             )"""
         )
 
@@ -297,6 +305,45 @@ class Database:
             return result
         else:
             return None
+        
+    # Запити пов'язані з кольорами 🎨
+
+    def color_test(self, color):
+        if color.startswith("#"):
+            color = color[1:]
+
+        if not re.match(r"^#?[0-9A-Fa-f]{6}$", color):
+            return False
+        
+        return color
+
+    def add_color(self, user_id, color): 
+        color = self.color_test(color)
+        if not color: return None
+        
+        self.cursor.execute("INSERT INTO colors (user_id, color) VALUES (?, ?)", (user_id, color))
+        self.conn.commit()
+        return True
+
+    def edit_color(self, user_id, color):
+        color = self.color_test(color)
+        if not color: return None
+
+        self.cursor.execute("UPDATE colors SET color = ? WHERE user_id = ?", (color, user_id))
+        self.conn.commit()
+        return True
+
+    def delete_color(self, user_id):
+        self.cursor.execute("DELETE FROM colors WHERE user_id = ?", (user_id, ))
+        self.conn.commit()
+        return True
+
+    def get_color(self, user_id):
+        self.cursor.execute("SELECT color FROM colors WHERE user_id = ?", (user_id, ))
+        result = self.cursor.fetchone()
+        return result[0] if result else None
+
+    # Закриття бд
 
     def close(self):
         self.conn.close()

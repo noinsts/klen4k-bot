@@ -18,7 +18,13 @@ class Chat(commands.Cog):
 		roles_name = [role.name for role in member.roles if role.name != '@everyone']  # пошук ролей користувача окрім '@everyone'
 		role_text = ",\n ".join(roles_name) if roles_name else "Немає ролей"  # красивий вивід ролей
 
-		embed = discord.Embed(title=f'Інформація про користувача {member.name}', color = discord.Color.blue())
+		color = discord.Color.blue()
+		favourite_color = self.db.get_color(member.id)
+
+		if favourite_color:
+			color = int(favourite_color, 16)
+			
+		embed = discord.Embed(title=f'Інформація про користувача {member.name}', color = color)
 
 		embed.add_field(name="👨🏻 Ім'я користувача", value=member.name, inline=False)
 		embed.add_field(name='🤖 ID користувача', value=member.id, inline=False)

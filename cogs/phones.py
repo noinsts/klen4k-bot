@@ -53,7 +53,7 @@ class Phones(commands.Cog):
 
         phone = self.db.get_phone(member.id)
 
-        embed = discord.Embed(title=f'Смартфон користувача **{member.display_name}**', color=0x808080)
+        embed = discord.Embed(title=f'Смартфон користувача {member.display_name}', color=0x808080)
 
         if phone:
             brand, model = phone
