@@ -36,6 +36,12 @@ class Chat(commands.Cog):
 		if city and country:
 			embed.add_field(name='🗺️ Місцезнаходження', value=f'{city}, {country}', inline=False)
 
+		phone = self.db.get_phone(member.id)
+
+		if phone:
+			brand, model = phone
+			embed.add_field(name='📱 Смартфон', value=f'{brand} {model}', inline=False)
+
 		await ctx.send(embed=embed)
 
 

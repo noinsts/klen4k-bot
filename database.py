@@ -67,6 +67,14 @@ class Database:
             )"""
         )
 
+        self.cursor.execute(
+            """CREATE TABLE IF NOT EXISTS phones(
+                user_id INTEGER PRIMARY KEY, 
+                brand TEXT NOT NULL,
+                model TEXT NOT NULL
+            )"""
+        )
+
         self.conn.commit()
 
     def add_default_logs(self):
@@ -266,6 +274,29 @@ class Database:
     def find_advice(self, user_id, weather):
         self.cursor.execute("SELECT activity FROM weather_preferences WHERE user_id = ? AND weather_type = ?", (user_id, weather))
         return self.cursor.fetchall()
+    
+    # Запити пов'язані з смартфонами 📱
+
+    def add_phone(self, user_id, brand, model):
+        self.cursor.execute("INSERT INTO phones (user_id, brand, model) VALUES (?, ?, ?)", (user_id, brand, model))
+        self.conn.commit()
+
+    def edit_phone(self, user_id, brand, model):
+        self.cursor.execute("UPDATE phones SET brand = ?, model = ? WHERE user_id = ?", (brand, model, user_id))
+        self.conn.commit()
+
+    def delete_phone(self, user_id):
+        self.cursor.execute("DELETE FROM phones WHERE user_id = ?", (user_id, ))
+        self.conn.commit()
+
+    def get_phone(self, user_id):
+        self.cursor.execute("SELECT brand, model FROM phones WHERE user_id = ?", (user_id, ))
+        result = self.cursor.fetchone()
+
+        if result:
+            return result
+        else:
+            return None
 
     def close(self):
         self.conn.close()
