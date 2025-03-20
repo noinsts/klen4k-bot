@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
 
-import config as cfg
+from src import config as cfg
 
-from database import Database
+from src.database import Database
 
 
 class Taxes(commands.Cog):

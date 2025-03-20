@@ -1,7 +1,6 @@
-import discord
 from discord.ext import commands
 
-from database import Database
+from src.database import Database
 
 
 class Color(commands.Cog):

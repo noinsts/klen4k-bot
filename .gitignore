@@ -1,7 +1,7 @@
 /.env
 /.idea
 /__pycache__
-/cogs/__pycache__
+/src/cogs/__pycache__
 /venv
 *.db
 /.vscode

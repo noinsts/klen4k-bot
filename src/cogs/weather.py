@@ -9,7 +9,7 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 
-from database import Database
+from src.database import Database
 
 
 class Weather(commands.Cog):

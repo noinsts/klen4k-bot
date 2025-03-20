@@ -1,7 +1,7 @@
 import datetime
 import discord
 from discord.ext import commands
-from database import Database  # Імпортуємо клас для роботи з БД
+from src.database import Database  # Імпортуємо клас для роботи з БД
 
 class Birthdays(commands.Cog):
     def __init__(self, bot):
