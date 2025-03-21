@@ -5,3 +5,5 @@
 /venv
 *.db
 /.vscode
+*.log
+/src/__pycache__
