@@ -9,7 +9,11 @@ class Wikipedia(commands.Cog):
         self.bot = bot
         self.wiki = wikipediaapi.Wikipedia(user_agent="klen4k-bot (contact: @noinsts (github))", language="uk")
 
-    @commands.command(aliases=['wiki'])
+    @commands.hybrid_command(
+        name = 'search',
+        description = 'Шукає інформацію в вікі',
+        aliases=['wiki']
+    )
     async def search(self, ctx, *, query: str):
         page = self.wiki.page(query)
 

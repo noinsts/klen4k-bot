@@ -14,7 +14,10 @@ class Logs(commands.Cog):
     """Запит дозволу відображати логи"""
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'set_log_visibility',
+        description = 'Встановлює видимість логувань (тільки адміни)'
+    )
     @commands.has_permissions(administrator=True)
     async def set_log_visibility(self, ctx, action: str, allow: bool):
         if not action:
@@ -30,7 +33,10 @@ class Logs(commands.Cog):
         await ctx.send(f'Успіх! **{action}** встановлено значення **{allow}**')
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'is_log_allowed',
+        description = 'Перевіряє чи доступні логи (тільки адміни)'
+    )
     @commands.has_permissions(administrator=True)
     async def is_log_allowed(self, ctx, action: str):
         if not action:
@@ -40,7 +46,10 @@ class Logs(commands.Cog):
         await ctx.send(f'**{self.db.is_log_allowed(action)}**')
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'delete_log_action',
+        description = 'Видаляє логи (тільки адміни)'
+    )
     @commands.has_permissions(administrator=True)
     async def delete_log_action(self, ctx, action: str):
         if not action:

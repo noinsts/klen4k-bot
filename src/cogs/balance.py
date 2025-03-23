@@ -15,7 +15,11 @@ class Balance(commands.Cog):
         self.bot = bot
         self.db = Database()
 
-    @commands.command()
+
+    @commands.hybrid_command(
+        name = 'change_balance',
+        description = 'Змінює баланс вказаного користувача (тільки адміністратор)'
+    )
     @commands.has_permissions(administrator=True)
     async def change_balance(self, ctx, amount: int, member: discord.Member = None):
         if not member:
@@ -32,7 +36,11 @@ class Balance(commands.Cog):
         else:
             await ctx.send(f'Баланс користувача **{member.display_name}** зменшено на **{-amount}** 💸')
 
-    @commands.command()
+
+    @commands.hybrid_command(
+        name = 'balance',
+        description = 'Відображає ваш баланс'
+    )
     async def balance(self, ctx, member: discord.Member = None):
         if not member:
             balance = self.db.get_balance(ctx.author.id)
@@ -41,7 +49,11 @@ class Balance(commands.Cog):
             balance = self.db.get_balance(member.id)
             await ctx.send(f'Баланс користувача **{member.display_name}** **{balance}** гривень 💸')
 
-    @commands.command()
+
+    @commands.hybrid_command(
+        name = 'balance_tier_list',
+        description = 'Список мажорів серверу'
+    )
     async def balance_tier_list(self, ctx):
         result = self.db.balance_tier_list()
         
@@ -61,6 +73,7 @@ class Balance(commands.Cog):
 
 
     @commands.command()
+    # залишаємо без змін
     @commands.has_permissions(administrator = True)
     async def clear_balances(self, ctx, password: str):
         if not password:
@@ -79,13 +92,20 @@ class Balance(commands.Cog):
         await ctx.send('**BALANCES DATABASE IS CLEAR**')
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'balance_privacy',
+        description = 'Дозволяє змінити налаштування приватності вашого балансу'
+    )
     async def balance_privacy(self, ctx):
         state = 1 if not self.db.get_balance_privacy(ctx.author.id) else 0
         self.db.set_balance_privacy(state, ctx.author.id)
         await ctx.send(f'Статус приватності балансу змінено на **{bool(state)}**')
 
-    @commands.command()
+
+    @commands.hybrid_command(
+        name = 'exchange',
+        description = 'Відображає курс вибраної вами валюти'
+    )
     async def exchange(self, ctx, ccy: str, base_ccy: str, money: int = None):
         if not base_ccy or not ccy:
             await ctx.send('Ви не вказали валюту')

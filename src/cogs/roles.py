@@ -9,7 +9,11 @@ class Roles(commands.Cog):
 		self.bot = bot
 
 
-	@commands.command()
+	@commands.hybrid_command(
+		name = 'role',
+		description = 'Додає/забирає x роль учаснику'
+	)
+	@commands.has_permissions(administrator=True)
 	async def role(self, ctx, action: str, role: str, member: discord.Member = None):
 		member = member or ctx.author
 

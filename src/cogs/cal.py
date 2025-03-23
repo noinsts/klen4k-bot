@@ -9,7 +9,10 @@ class Calendar(commands.Cog):
         self.bot = bot
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'calendar',
+        description = 'Відображає календар'
+    )
     async def calendar(self, ctx, mode: str, year: int, month: int = None):
         if mode == 'month':
             if month is None or month not in range(1, 13):

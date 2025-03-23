@@ -11,7 +11,10 @@ class Chat(commands.Cog):
 		self.db = Database()
 
 
-	@commands.command()
+	@commands.hybrid_command(
+		name = 'userinfo',
+		description = 'Відображає інформацію про обраного користувача'
+	)
 	async def userinfo(self, ctx, member: discord.Member = None):
 		member = member or ctx.author
 
@@ -51,13 +54,20 @@ class Chat(commands.Cog):
 		await ctx.send(embed=embed)
 
 
-	@commands.command()
+	@commands.hybrid_command(
+		name = 'choice',
+		description = 'Пропонує Так/Ні/Можливо, щодо вашого промпту'
+	)
 	async def choice(self, ctx, ask: str):
 		answears = ["Так", "Ні", "Можливо"]
 		await ctx.send(f'{random.choice(answears)}, {ask}')
 
 
-	@commands.command(aliases=['кто', 'хто'])
+	@commands.hybrid_command(
+		name = 'who',
+		description = 'Випадково обирає користувача',
+		aliases=['кто', 'хто']
+	)
 	async def who(self, ctx, reason: str):
 		member = random.choice(ctx.guild.members)
 		 

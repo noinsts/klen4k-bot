@@ -22,7 +22,10 @@ class Weather(commands.Cog):
         return os.getenv('WEATHER_API')
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'weather',
+        description = 'Відправляє погоду по вказаному місту'
+    )
     async def weather(self, ctx, city: str = None):
         if not city:
             saved_city = self.db.get_city(ctx.author.id)
@@ -121,7 +124,11 @@ class Weather(commands.Cog):
             return
         
 
-    @commands.command(aliases=['add_location'])
+    @commands.hybrid_command(
+        name = 'set_location',
+        description = 'Встановлює ваше місто',
+        aliases=['add_location']
+    )
     async def set_location(self, ctx, city: str, country: str):
         if not city:
             await ctx.send('Помилка! Ви не вказали місто.')
@@ -137,7 +144,11 @@ class Weather(commands.Cog):
             self.db.add_location(ctx.author.id, city, country)
             await ctx.send(f"Успіх! Вашу локацію **{city}** та **{country}** додано до бд.")
 
-    @commands.command()
+
+    @commands.hybrid_command(
+        name = 'change_location',
+        description = 'Змінює ваше місто'
+    )
     async def change_location(self, ctx, city: str, country: str):
         if not city:
             await ctx.send('Помилка! Ви не вказали місто.')
@@ -150,7 +161,12 @@ class Weather(commands.Cog):
         self.db.edit_location(ctx.author.id, city, country)
         await ctx.send('Успіх! Ви змінили назву ваших міста та країни в бд.')
 
-    @commands.command(alises=['delete_location'])
+
+    @commands.hybrid_command(
+        name = 'del_location',
+        description = 'Видає ваше місто',
+        alises=['delete_location']
+    )
     async def del_location(self, ctx):
         self.db.delete_location(ctx.author.id)
         await ctx.send('Успіх! Ви видалили вашу локацію з бд.')
@@ -183,7 +199,10 @@ class Weather(commands.Cog):
                 return 'neutral'
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'add_weahter_advice',
+        description = 'Додає персоналізовану пораду'
+    )
     async def add_weather_advice(self, ctx, weather_type: str, *, activity: str): 
         if weather_type not in ['positive', 'negative']:
             await ctx.send('Помилка! Використовуйте **positive** або **negative**')
@@ -192,7 +211,11 @@ class Weather(commands.Cog):
         self.db.add_advice(ctx.author.id, weather_type, activity)
         await ctx.send('Успіх! Ваші персоналізовані поради додано.')
 
-    @commands.command()
+
+    @commands.hybrid_command(
+        name = 'personalize_advice',
+        description = 'Пропонує вам персоналізовану пораду'
+    )
     async def personalize_advice(self, ctx):
         city = self.db.get_city(ctx.author.id)
         weather = self.find_weather_type(city)

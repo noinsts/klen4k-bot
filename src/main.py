@@ -40,6 +40,8 @@ class BotClient(commands.Bot):
 
     async def on_ready(self):
         self.log.info(f'✅ Bot {self.user} is running!')
+        await self.tree.sync()
+        self.log.info("🔄 Slash commands synced")
 
     async def on_command(self, ctx):
         self.log.info(f"⌨ {ctx.author} виконав команду: {ctx.command}")

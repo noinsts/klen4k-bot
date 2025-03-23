@@ -12,7 +12,10 @@ class Taxes(commands.Cog):
         self.db = Database()
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'toggle_taxes',
+        description = 'Вмикає/вимикає податки'
+    )
     @commands.has_permissions(administrator = True)
     async def toggle_taxes(self, ctx):
         state = 1 if not self.db.get_tax_state() else 0
@@ -20,13 +23,19 @@ class Taxes(commands.Cog):
         await ctx.send(f"Податки {'увімкнено' if state else 'вимкнено'}!")
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'change_tax',
+        description = 'Змінює вартість дії'
+    )
     @commands.has_permissions(administrator = True)
     async def change_tax(self, ctx, action: str, amount: int):
         self.db.set_taxes(action, amount)
         await ctx.send('Податок змінено')
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'taxes',
+        description = 'Відображає статус податків'
+    )
     async def taxes(self, ctx):
         taxes = self.db.get_taxes()
         allow = self.db.get_tax_state()

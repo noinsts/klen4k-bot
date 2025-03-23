@@ -9,8 +9,12 @@ class Phones(commands.Cog):
         self.bot = bot
         self.db = Database()
 
-    @commands.command()
-    async def add_phone(self, ctx, brand: str, *model: str):
+
+    @commands.hybrid_command(
+        name = 'add_phone',
+        description = 'Додає ваш смартфон'
+    )
+    async def add_phone(self, ctx, brand: str, model: str):
         model_name = " ".join(model)
         if not brand or not model_name:
             await ctx.send('Помилка, введіть бренд та модель телефону')
@@ -22,8 +26,12 @@ class Phones(commands.Cog):
         else:
             await ctx.send('Помилка! Ваш телефон вже є в бд')
 
-    @commands.command()
-    async def edit_phone(self, ctx, brand: str, *model: str):
+
+    @commands.hybrid_command(
+        name = 'edit_phone',
+        description = 'Змінює ваш телефон'
+    )
+    async def edit_phone(self, ctx, brand: str, model: str):
         model_name = " ".join(model)
         if not brand or not model_name:
             await ctx.send('Помилка! Введіть нові бренд та модель смартфону')
@@ -36,7 +44,10 @@ class Phones(commands.Cog):
             await ctx.send('Помилка! Ваш телефон ще не вказаний, додайте його за допомогою **.add_phone**')
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'delete_phone',
+        description = 'Видаляє ваш телефон'
+    )
     async def delete_phone(self, ctx):
         if not self.db.get_phone(ctx.author.id):
             await ctx.send('Помилка! Вашого телефону немає в базі')
@@ -46,7 +57,10 @@ class Phones(commands.Cog):
         await ctx.send('Успіх! Ваш телефон видалено з бази.')
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'phone',
+        description = 'Відображає смартфон обраного користувача'
+    )
     async def phone(self, ctx, member: discord.Member = None):
         if not member:
             member = ctx.author

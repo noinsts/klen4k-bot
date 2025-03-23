@@ -1,5 +1,6 @@
 import datetime
 import discord
+from discord.app_commands import describe
 from discord.ext import commands
 from src.database import Database  # Імпортуємо клас для роботи з БД
 
@@ -8,7 +9,10 @@ class Birthdays(commands.Cog):
         self.bot = bot
         self.db = Database()  # Створюємо підключення до БД
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'add_birthday',
+        description = 'Додає ваш дн до бази данних'
+    )
     async def add_birthday(self, ctx, date: str, member: discord.Member = None):
         try:
             datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -22,7 +26,10 @@ class Birthdays(commands.Cog):
         self.db.add_birthday(member.id, date)
         await ctx.send(f'Дата народження **{date}** для користувача **{member.display_name}** записана')
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'update_birthday',
+        description = 'Оновлює ваш дн в бд'
+    )
     async def update_birthday(self, ctx, date: str, member: discord.Member = None):
         try:
             datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -36,7 +43,10 @@ class Birthdays(commands.Cog):
         self.db.update_birthday(member.id, date)
         await ctx.send(f'Дата народження користувача **{member.display_name}** оновлена до **{date}**')
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'remove_birthday',
+        description = 'Видаляє ваш день народження з бд'
+    )
     async def remove_birthday(self, ctx, member: discord.Member = None):
         if member is None:
             member = ctx.author
@@ -44,7 +54,10 @@ class Birthdays(commands.Cog):
         self.db.remove_birthday(member.id)
         await ctx.send(f'Дата народження користувача **{member.display_name}** видалена')
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'birthday',
+        description = 'Відображає день народження обраного користувача'
+    )
     async def birthday(self, ctx, member: discord.Member = None):
         if member is None:
             member = ctx.author
@@ -55,7 +68,10 @@ class Birthdays(commands.Cog):
         else:
             await ctx.send(f'Дата народження користувача **{member.display_name}** не знайдена')
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'birthday_list',
+        description = 'Відображає список днів народження'
+    )
     async def birthday_list(self, ctx):
         results = self.db.get_all_birthdays()
 
@@ -74,7 +90,10 @@ class Birthdays(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'in_my_day',
+        description = 'Відображає список людей, в яких дн в день з вашим'
+    )
     async def in_my_day(self, ctx, member: discord.Member = None):
         if member is None:
             member = ctx.author

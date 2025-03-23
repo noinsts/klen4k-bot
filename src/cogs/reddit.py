@@ -17,7 +17,10 @@ class Reddit(commands.Cog):
             user_agent="klen4k-bot (by u/Alarming_State8450)"
         )
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'top',
+        description = 'Відображає топ1 пост вашого сабреддіта'
+    )
     async def top(self, ctx, subreddit_name: str = "python"):
         subreddit = self.reddit.subreddit(subreddit_name)
         post = next(subreddit.hot(limit=1))
@@ -32,7 +35,10 @@ class Reddit(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'meme',
+        description = 'Відображає рандомний мем з r/ukr_memes'
+    )
     async def meme(self, ctx):
         try:
             subreddit = self.reddit.subreddit("ukr_memes")

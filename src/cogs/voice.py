@@ -11,7 +11,10 @@ class Voice(commands.Cog):
         self.bot = bot
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'afk',
+        description = 'Відправляє випадкового користувача з вашого войсу в афк войс'
+    )
     async def afk(self, ctx, member: discord.Member):
         guild = self.bot.get_guild(cfg.GUILD_ID)
         afk = guild.get_channel(cfg.AFK_ID)
@@ -24,7 +27,10 @@ class Voice(commands.Cog):
             await ctx.send(f"**{member.display_name}** відправлений до **{afk.name}**")
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'roulette',
+        description = 'Кікає випадкову людину з вашого войсу'
+    )
     async def roulette(self, ctx):
         voice = ctx.author.voice
         channel = voice.channel
@@ -40,7 +46,10 @@ class Voice(commands.Cog):
             await ctx.send(f"З войса **{channel.name}** було кікнуто **{kick.display_name}**, тому що так нада")
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'private',
+        description = 'Відправляє вас та вашого друга в окремий войс'
+    )
     async def private(self, ctx, member: discord.Member):
         duo = ctx.guild.get_channel(cfg.DUO_ID)
         lenovo = ctx.guild.get_channel(cfg.LENOVO_ID)
@@ -60,7 +69,10 @@ class Voice(commands.Cog):
             await ctx.send('Вільного канала не знайдено.')
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'vlock',
+        description = 'Блокує ваш войс'
+    )
     async def vlock(self, ctx):
         voice = ctx.author.voice
 
@@ -77,7 +89,10 @@ class Voice(commands.Cog):
         await ctx.send(f'Доступ до канала **{channel.name}** простим смертним заблоковано')
 
 
-    @commands.command()
+    @commands.hybrid_command(
+        name = 'vunlock',
+        description = 'Розблоковує ваш войс'
+    )
     async def vunlock(self, ctx):
         voice = ctx.author.voice
 

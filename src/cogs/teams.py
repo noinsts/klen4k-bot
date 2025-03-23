@@ -11,7 +11,10 @@ class Teams(commands.Cog):
 		self.bot = bot
 
 
-	@commands.command()
+	@commands.hybrid_command(
+		name = 'teams_create',
+		description = 'Створює команду (розподіляє 4 учасників войсу на 2 команди)'
+	)
 	async def teams_create(self, ctx):
 		voice = ctx.author.voice
 		channel = voice.channel
@@ -49,7 +52,10 @@ class Teams(commands.Cog):
 			await ctx.send(embed=embed)
 
 
-	@commands.command()
+	@commands.hybrid_command(
+		name = 'clear_teams',
+		description = 'Видаляє ролі команд в учасників серверу'
+	)
 	async def clear_teams(self, ctx):
 		for role_id in [cfg.TEAM_1_ID, cfg.TEAM_2_ID]:
 			role = ctx.guild.get_role(role_id)
@@ -59,7 +65,10 @@ class Teams(commands.Cog):
 			await ctx.send("Ролі команд очищено!")
 
 
-	@commands.command()
+	@commands.hybrid_command(
+		name = 'teamsplit',
+		description = 'Розподіляє учасників по войсах'
+	)
 	async def teamsplit(self, ctx):
 		team1_members = ctx.guild.get_role(cfg.TEAM_1_ID).members
 		team2_members = ctx.guild.get_role(cfg.TEAM_2_ID).members
@@ -76,7 +85,10 @@ class Teams(commands.Cog):
 		await ctx.send('Учасники розкинуті по войсах')
 
 
-	@commands.command()
+	@commands.hybrid_command(
+		name = 'teammerge',
+		description = "З'єднує команди в один войс"
+	)
 	async def teammerge(self, ctx):
 		team1_members = ctx.guild.get_role(cfg.TEAM_1_ID).members
 		team2_members = ctx.guild.get_role(cfg.TEAM_2_ID).members
