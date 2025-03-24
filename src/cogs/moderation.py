@@ -142,6 +142,7 @@ class Moderation(commands.Cog):
 
 		if action not in actions:
 			await ctx.send('Помилка action не знайдено, спробуйте voice_kick, kick, ban, timeout')
+			return
 
 
 		embed = discord.Embed(title='Розпочато голосування', color = discord.Color.blue())

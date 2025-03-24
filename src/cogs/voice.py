@@ -109,5 +109,20 @@ class Voice(commands.Cog):
         await ctx.send(f'Доступ до канала **{channel.name}** простим смертним дозволено')
 
 
+    @commands.hybrid_command(
+        name = 'vc_slots',
+        description = 'Змінити кількість допустимих користувачів в войсі'
+    )
+    async def vc_slots(self, ctx, new_limit: int):
+        if not ctx.author.voice or not ctx.author.voice.channel:
+            await ctx.send("Помилка! Ви не в войсі")
+            return
+
+        channel = ctx.author.voice.channel
+
+        await channel.edit(user_limit = new_limit)
+        await ctx.send(f'Успіх! Кількість людей в **{channel.name}** змінена на {new_limit}')
+
+
 async def setup(bot):
     await bot.add_cog(Voice(bot))
