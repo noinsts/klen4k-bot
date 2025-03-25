@@ -104,6 +104,10 @@ class Moderation(commands.Cog):
 		if not member:
 			member = ctx.author
 
+		if time < 30:
+			await ctx.send('Мінімальний час голосування 30 секунд')
+			return
+
 		actions = {
 			"voice_kick": lambda member, reason: member.move_to(None, reason=reason),
 			"kick": lambda member, reason: member.kick(reason=reason),
