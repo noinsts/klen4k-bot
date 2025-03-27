@@ -83,6 +83,14 @@ class Database:
             )"""
         )
 
+        self.cursor.execute(
+            """CREATE TABLE IF NOT EXISTS auction(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                name TEXT NOT NULL
+            )"""
+        )
+
         self.conn.commit()
 
     def add_default_logs(self):

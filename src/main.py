@@ -29,7 +29,8 @@ class BotClient(commands.Bot):
             "cogs.voice", "cogs.chat", "cogs.roles", "cogs.moderation",
             "cogs.steam", "cogs.teams", "cogs.logs", "cogs.cal",
             "cogs.birthdays", "cogs.balance", "cogs.taxes", "cogs.weather",
-            "cogs.coffee", "cogs.phones", "cogs.color", "cogs.wikipedia", "cogs.reddit"
+            "cogs.coffee", "cogs.phones", "cogs.color", "cogs.wikipedia",
+            "cogs.reddit", "cogs.auction"
         ]
 
         self.log = setup_logger()
