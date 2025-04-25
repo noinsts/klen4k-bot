@@ -25,7 +25,7 @@ class Logs(BaseCog):
             await ctx.send('Введіть значення')
             return
 
-        self.db.set_log_visibility(action, allow)
+        self.db.logs.set_log_visibility(action, allow)
 
         await ctx.send(f'Успіх! **{action}** встановлено значення **{allow}**')
 
@@ -40,7 +40,7 @@ class Logs(BaseCog):
             await ctx.send('Помилка, введіть дію')
             return
 
-        await ctx.send(f'**{self.db.is_log_allowed(action)}**')
+        await ctx.send(f'**{self.db.logs.is_log_allowed(action)}**')
 
 
     @commands.hybrid_command(
@@ -53,7 +53,7 @@ class Logs(BaseCog):
             await ctx.send('Помилка, введіть дію')
             return
 
-        self.db.delete_log_action(action)
+        self.db.logs.delete_log_action(action)
         await ctx.send(f'Успіх! {action} видалено')
 
 
@@ -86,7 +86,7 @@ class Logs(BaseCog):
                               color = discord.Color.red()
         )
 
-        if self.db.is_log_allowed("voice_logs"):
+        if self.db.logs.is_log_allowed("voice_logs"):
             await log_channel.send(embed=embed)
 
 

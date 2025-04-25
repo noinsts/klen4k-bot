@@ -12,7 +12,7 @@ class Color(BaseCog):
         description = 'Додає ваш улюблений колір'
     )
     async def add_color(self, ctx, color: str):
-        if self.db.add_color(ctx.author.id, color):
+        if self.db.color.add_color(ctx.author.id, color):
             await ctx.send('Успіх! Ваш улюблений колір додано')
         else:
             await ctx.send("Помилка, некоректний HEX-код, введіть щось типу '#ff0000'.")
@@ -22,7 +22,7 @@ class Color(BaseCog):
         description = 'Змінює ваш улюблений колір'
     )
     async def edit_color(self, ctx, color: str):
-        if self.db.edit_color(ctx.author.id, color):
+        if self.db.color.edit_color(ctx.author.id, color):
             await ctx.send('Успіх! Колір змінено')
         else:
             await ctx.send("Помилка, некоректний HEX-код, введіть щось типу '#ff0000'.")
@@ -32,7 +32,7 @@ class Color(BaseCog):
         description = 'Видаляє ваш улюблений колір'
     )
     async def delete_color(self, ctx):
-        if self.db.delete_color(ctx.author.id):
+        if self.db.color.delete_color(ctx.author.id):
             await ctx.send('Успіх! Колір видалено з бд')
         else:
             await ctx.send("Помилка, колір не видалено, спробуйте знову")

@@ -20,8 +20,8 @@ class Auction(BaseCog):
             await ctx.send('Введіть назву предмету, що потрібно замовити')
             return
 
-        self.db.add_auc_item(ctx.author.id, name)
-        auc_id = self.db.get_auction_id(ctx.author.id, name)
+        self.db.auction.add_auc_item(ctx.author.id, name)
+        auc_id = self.db.auction.get_auction_id(ctx.author.id, name)
         await ctx.send(f'Успіх! Ви додали лот **{name}**, його ID: **{auc_id}**')
 
 
@@ -30,7 +30,7 @@ class Auction(BaseCog):
         description = 'Бот відправляє список активних лотів'
     )
     async def auction(self, ctx):
-        results = self.db.auc_list()
+        results = self.db.auction.auc_list()
 
         if not results:
             await ctx.send("Немає активних лотів")
@@ -54,7 +54,7 @@ class Auction(BaseCog):
         user = user if user else ctx.author 
         user_id = user.id
 
-        results = self.db.user_auc_list(user_id)
+        results = self.db.auction.user_auc_list(user_id)
 
         if not results:
             await ctx.send(f'У користувача **{user.display_name}** немає активних лотів')
@@ -77,7 +77,7 @@ class Auction(BaseCog):
             await ctx.send("Помилка! Ви не вказали id")
             return
         
-        if self.db.delete_auc(id_auc, ctx.author.id):
+        if self.db.auction.delete_auc(id_auc, ctx.author.id):
             await ctx.send(f'Успіх! Лот **№{id_auc}** видалено.')
         else:
             await ctx.send('Помилка. Видалити лот не вдалося')

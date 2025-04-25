@@ -15,8 +15,8 @@ class Taxes(BaseCog):
     )
     @commands.has_permissions(administrator = True)
     async def toggle_taxes(self, ctx):
-        state = 1 if not self.db.get_tax_state() else 0
-        self.db.set_tax_state(state)
+        state = 1 if not self.db.taxes.get_tax_state() else 0
+        self.db.taxes.set_tax_state(state)
         await ctx.send(f"Податки {'увімкнено' if state else 'вимкнено'}!")
 
 
@@ -26,7 +26,7 @@ class Taxes(BaseCog):
     )
     @commands.has_permissions(administrator = True)
     async def change_tax(self, ctx, action: str, amount: int):
-        self.db.set_taxes(action, amount)
+        self.db.taxes.set_taxes(action, amount)
         await ctx.send('Податок змінено')
 
 
@@ -35,8 +35,8 @@ class Taxes(BaseCog):
         description = 'Відображає статус податків'
     )
     async def taxes(self, ctx):
-        taxes = self.db.get_taxes()
-        allow = self.db.get_tax_state()
+        taxes = self.db.taxes.get_taxes()
+        allow = self.db.taxes.get_tax_state()
 
         if not taxes:
             await ctx.send('Немає категорій податків')
@@ -58,16 +58,16 @@ class Taxes(BaseCog):
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         if before.channel is None and after.channel is not None:
-            if self.db.get_tax_state():
-                tax = self.db.amount_tax("join_voice")  # змінено на "join_voice"
+            if self.db.taxes.get_tax_state():
+                tax = self.db.taxes.amount_tax("join_voice")  # змінено на "join_voice"
 
                 if not tax:
                     print("Помилка: податок для 'join_voice' не знайдено в БД!")
                     return
 
-                self.db.update_balance(member.id, -tax)
+                self.db.taxes.update_balance(member.id, -tax)
 
-                if self.db.is_log_allowed("tax_logs"):
+                if self.db.taxes.is_log_allowed("tax_logs"):
                     log_channel = member.guild.get_channel(cfg.LOG_CHANNEL_ID)
 
                     if log_channel:

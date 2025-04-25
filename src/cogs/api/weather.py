@@ -27,7 +27,7 @@ class Weather(BaseCog):
     )
     async def weather(self, ctx, city: str = None):
         if not city:
-            saved_city = self.db.get_city(ctx.author.id)
+            saved_city = self.db.location.get_city(ctx.author.id)
             if saved_city:
                 city = saved_city
             else:
@@ -137,10 +137,10 @@ class Weather(BaseCog):
             await ctx.send('Помилка! Ви не вказали країну')
             return
         
-        if self.db.get_city(ctx.author.id):
+        if self.db.location.get_city(ctx.author.id):
             await ctx.send('Помилка! Данні про місто та країну вже додані')
         else:
-            self.db.add_location(ctx.author.id, city, country)
+            self.db.location.add_location(ctx.author.id, city, country)
             await ctx.send(f"Успіх! Вашу локацію **{city}** та **{country}** додано до бд.")
 
 
@@ -157,7 +157,7 @@ class Weather(BaseCog):
             await ctx.send('Помилка! Ви не вказали країну')
             return
         
-        self.db.edit_location(ctx.author.id, city, country)
+        self.db.location.edit_location(ctx.author.id, city, country)
         await ctx.send('Успіх! Ви змінили назву ваших міста та країни в бд.')
 
 
@@ -167,7 +167,7 @@ class Weather(BaseCog):
         alises=['delete_location']
     )
     async def del_location(self, ctx):
-        self.db.delete_location(ctx.author.id)
+        self.db.location.delete_location(ctx.author.id)
         await ctx.send('Успіх! Ви видалили вашу локацію з бд.')
 
     def find_weather_type(self, city):
@@ -207,7 +207,7 @@ class Weather(BaseCog):
             await ctx.send('Помилка! Використовуйте **positive** або **negative**')
             return
         
-        self.db.add_advice(ctx.author.id, weather_type, activity)
+        self.db.location.add_advice(ctx.author.id, weather_type, activity)
         await ctx.send('Успіх! Ваші персоналізовані поради додано.')
 
 
@@ -216,9 +216,9 @@ class Weather(BaseCog):
         description = 'Пропонує вам персоналізовану пораду'
     )
     async def personalize_advice(self, ctx):
-        city = self.db.get_city(ctx.author.id)
+        city = self.db.location.get_city(ctx.author.id)
         weather = self.find_weather_type(city)
-        activities = self.db.find_advice(ctx.author.id, weather)
+        activities = self.db.location.find_advice(ctx.author.id, weather)
 
         if not city:
             await ctx.send('Ви не вказали місто, спробуйте **.add_location**')

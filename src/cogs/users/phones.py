@@ -19,8 +19,8 @@ class Phones(BaseCog):
             await ctx.send('Помилка, введіть бренд та модель телефону')
             return
         
-        if not self.db.get_phone(ctx.author.id):
-            self.db.add_phone(ctx.author.id, brand, model_name)
+        if not self.db.phone.get_phone(ctx.author.id):
+            self.db.phone.add_phone(ctx.author.id, brand, model_name)
             await ctx.send('Успіх! Ваш смартфон додано до бд')
         else:
             await ctx.send('Помилка! Ваш телефон вже є в бд')
@@ -36,8 +36,8 @@ class Phones(BaseCog):
             await ctx.send('Помилка! Введіть нові бренд та модель смартфону')
             return
         
-        if self.db.get_phone(ctx.author.id):
-            self.db.edit_phone(ctx.author.id, brand, model_name)
+        if self.db.phone.get_phone(ctx.author.id):
+            self.db.phone.edit_phone(ctx.author.id, brand, model_name)
             await ctx.send('Успіх! Ваш телефон оновлено.')
         else:
             await ctx.send('Помилка! Ваш телефон ще не вказаний, додайте його за допомогою **.add_phone**')
@@ -48,11 +48,11 @@ class Phones(BaseCog):
         description = 'Видаляє ваш телефон'
     )
     async def delete_phone(self, ctx):
-        if not self.db.get_phone(ctx.author.id):
+        if not self.db.phone.get_phone(ctx.author.id):
             await ctx.send('Помилка! Вашого телефону немає в базі')
             return
         
-        self.db.delete_phone(ctx.author.id)
+        self.db.phone.delete_phone(ctx.author.id)
         await ctx.send('Успіх! Ваш телефон видалено з бази.')
 
 
@@ -64,7 +64,7 @@ class Phones(BaseCog):
         if not member:
             member = ctx.author
 
-        phone = self.db.get_phone(member.id)
+        phone = self.db.phone.get_phone(member.id)
 
         embed = discord.Embed(title=f'Смартфон користувача {member.display_name}', color=0x808080)
 

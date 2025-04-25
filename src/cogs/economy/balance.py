@@ -25,7 +25,7 @@ class Balance(BaseCog):
             await ctx.send(f'Баланс користувача **{member.display_name}** не змінено.')
             return
 
-        self.db.update_balance(member.id, amount)  # запит на зміну балансу
+        self.db.balance.update_balance(member.id, amount)  # запит на зміну балансу
 
         if amount > 0:
             await ctx.send(f'Баланс користувача **{member.display_name}** збільшено на **{amount}** 💸')
@@ -39,10 +39,10 @@ class Balance(BaseCog):
     )
     async def balance(self, ctx, member: discord.Member = None):
         if not member:
-            balance = self.db.get_balance(ctx.author.id)
+            balance = self.db.balance.get_balance(ctx.author.id)
             await ctx.send(f'Ваш баланс **{balance}** гривень 💸')
         else:
-            balance = self.db.get_balance(member.id)
+            balance = self.db.balance.get_balance(member.id)
             await ctx.send(f'Баланс користувача **{member.display_name}** **{balance}** гривень 💸')
 
 
@@ -51,7 +51,7 @@ class Balance(BaseCog):
         description = 'Список мажорів серверу'
     )
     async def balance_tier_list(self, ctx):
-        result = self.db.balance_tier_list()
+        result = self.db.balance.balance_tier_list()
         
         if not result:
             await ctx.send('Інформації не знайдено, спробуйте пізніше')
@@ -73,8 +73,8 @@ class Balance(BaseCog):
         description = 'Дозволяє змінити налаштування приватності вашого балансу'
     )
     async def balance_privacy(self, ctx):
-        state = 1 if not self.db.get_balance_privacy(ctx.author.id) else 0
-        self.db.set_balance_privacy(state, ctx.author.id)
+        state = 1 if not self.db.balance.get_balance_privacy(ctx.author.id) else 0
+        self.db.balance.set_balance_privacy(state, ctx.author.id)
         await ctx.send(f'Статус приватності балансу змінено на **{bool(state)}**')
 
 
@@ -98,7 +98,7 @@ class Balance(BaseCog):
             await ctx.send('Введіть правильний пароль')
             return
 
-        self.db.clear_balances()
+        self.db.balance.clear_balances()
 
         await ctx.send('**BALANCES DATABASE IS CLEAR**')
 

@@ -1,6 +1,6 @@
 from discord.ext import commands
 
-from src.database import Database
+from src.db.database import Database
 from src.utils.json import JSONLoader
 from src.utils.logger import setup_logger
 

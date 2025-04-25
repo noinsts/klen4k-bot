@@ -25,7 +25,7 @@ class Birthdays(BaseCog):
         if member is None:
             member = ctx.author
 
-        self.db.add_birthday(member.id, date)
+        self.db.birthday.add_birthday(member.id, date)
         await ctx.send(f'Дата народження **{date}** для користувача **{member.display_name}** записана')
 
     @commands.hybrid_command(
@@ -42,7 +42,7 @@ class Birthdays(BaseCog):
         if member is None:
             member = ctx.author
 
-        self.db.update_birthday(member.id, date)
+        self.db.birthday.update_birthday(member.id, date)
         await ctx.send(f'Дата народження користувача **{member.display_name}** оновлена до **{date}**')
 
     @commands.hybrid_command(
@@ -53,7 +53,7 @@ class Birthdays(BaseCog):
         if member is None:
             member = ctx.author
 
-        self.db.remove_birthday(member.id)
+        self.db.birthday.remove_birthday(member.id)
         await ctx.send(f'Дата народження користувача **{member.display_name}** видалена')
 
     @commands.hybrid_command(
@@ -64,7 +64,7 @@ class Birthdays(BaseCog):
         if member is None:
             member = ctx.author
 
-        result = self.db.get_birthday(member.id)
+        result = self.db.birthday.get_birthday(member.id)
         if result:
             await ctx.send(f'День народження користувача **{member.display_name}**: **{result[0]}**')
         else:
@@ -75,7 +75,7 @@ class Birthdays(BaseCog):
         description = 'Відображає список днів народження'
     )
     async def birthday_list(self, ctx):
-        results = self.db.get_all_birthdays()
+        results = self.db.birthday.get_all_birthdays()
 
         if not results:
             await ctx.send('Немає збережених днів народження')
@@ -100,14 +100,14 @@ class Birthdays(BaseCog):
         if member is None:
             member = ctx.author
 
-        result = self.db.get_birthday(member.id)
+        result = self.db.birthday.get_birthday(member.id)
         if not result:
             await ctx.send("День народження користувача не знайдений.")
             return
 
         birthday_str = result[0]
         birthday_date = datetime.datetime.strptime(birthday_str, '%Y-%m-%d').date()
-        same_birthday_users = self.db.get_birthdays_by_date(birthday_date.strftime('%m-%d'))
+        same_birthday_users = self.db.birthday.get_birthdays_by_date(birthday_date.strftime('%m-%d'))
 
         if not same_birthday_users:
             await ctx.send("Не знайдено користувачів з таким же днем народження.")
