@@ -3,7 +3,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-from logger import setup_logger
+from src.utils.logger import setup_logger
 
 
 class BotClient(commands.Bot):
@@ -26,11 +26,11 @@ class BotClient(commands.Bot):
 
         self.token = token
         self.cogs_list = [
-            "cogs.voice", "cogs.chat", "cogs.roles", "cogs.moderation",
-            "cogs.steam", "cogs.teams", "cogs.logs", "cogs.cal",
-            "cogs.birthdays", "cogs.balance", "cogs.taxes", "cogs.weather",
-            "cogs.coffee", "cogs.phones", "cogs.color", "cogs.wikipedia",
-            "cogs.reddit", "cogs.auction"
+            "cogs.utility.voice", "cogs.fun.chat", "cogs.utility.roles", "cogs.admin.moderation",
+            "cogs.api.steam", "cogs.gaming.teams", "cogs.admin.logs", "cogs.utility.cal",
+            "cogs.users.birthdays", "cogs.economy.balance", "cogs.economy.taxes", "cogs.api.weather",
+            "cogs.utility.coffee", "cogs.users.phones", "cogs.users.color", "cogs.api.wikipedia",
+            "cogs.api.reddit", "cogs.gaming.auction", "cogs.users.userinfo", "cogs.economy.exchange"
         ]
 
         self.log = setup_logger()

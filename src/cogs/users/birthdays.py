@@ -1,13 +1,15 @@
 import datetime
-import discord
-from discord.app_commands import describe
-from discord.ext import commands
-from src.database import Database  # Імпортуємо клас для роботи з БД
 
-class Birthdays(commands.Cog):
+import discord
+from discord.ext import commands
+
+from src.cogs.base import BaseCog
+
+
+class Birthdays(BaseCog):
     def __init__(self, bot):
-        self.bot = bot
-        self.db = Database()  # Створюємо підключення до БД
+        super().__init__(bot)
+
 
     @commands.hybrid_command(
         name = 'add_birthday',

@@ -1,14 +1,16 @@
-import asyncio
-import discord
-from discord.ext import commands
 from datetime import timedelta
-from src.logger import setup_logger
+
+import discord
+import asyncio
+from discord.ext import commands
+
+from src.cogs.base import BaseCog
 
 
-class Moderation(commands.Cog):
+class Moderation(BaseCog):
 	def __init__(self, bot):
-		self.bot = bot
-		self.log = setup_logger()
+		super().__init__(bot)
+
 
 	@commands.hybrid_command(
 		name="timeout",

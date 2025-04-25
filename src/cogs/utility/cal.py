@@ -3,10 +3,12 @@ import calendar
 import discord
 from discord.ext import commands
 
+from src.cogs.base import BaseCog
 
-class Calendar(commands.Cog):
+
+class Calendar(BaseCog):
     def __init__(self, bot):
-        self.bot = bot
+        super().__init__(bot)
 
 
     @commands.hybrid_command(

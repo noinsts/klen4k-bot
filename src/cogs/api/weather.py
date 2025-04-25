@@ -1,23 +1,22 @@
 import os
 import random
-import requests
-
-from dotenv import load_dotenv
-
 from datetime import datetime
 
+import requests
 import discord
 from discord.ext import commands
+from dotenv import load_dotenv
 
-from src.database import Database
+from src.cogs.base import BaseCog
 
 
-class Weather(commands.Cog):
+class Weather(BaseCog):
     def __init__(self, bot):
-        self.bot = bot 
-        self.db = Database()
+        super().__init__(bot)
 
-    def api_key(self):
+
+    @staticmethod
+    def api_key():
         load_dotenv()
         return os.getenv('WEATHER_API')
 

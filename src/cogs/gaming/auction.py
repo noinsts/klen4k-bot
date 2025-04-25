@@ -1,13 +1,14 @@
+from termios import BSDLY
+
 import discord
 from discord.ext import commands
 
-from src.database import Database
+from src.cogs.base import BaseCog
 
 
-class Auction(commands.Cog):
+class Auction(BaseCog):
     def __init__(self, bot):
-        self.bot = bot
-        self.db = Database()
+        super().__init__(bot)
 
 
     @commands.hybrid_command(

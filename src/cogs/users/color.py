@@ -1,12 +1,10 @@
 from discord.ext import commands
 
-from src.database import Database
+from src.cogs.base import BaseCog
 
-
-class Color(commands.Cog):
+class Color(BaseCog):
     def __init__(self, bot):
-        self.bot = bot
-        self.db = Database()
+        super().__init__(bot)
 
 
     @commands.hybrid_command(

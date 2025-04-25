@@ -1,21 +1,25 @@
-import praw
 import os
-from dotenv import load_dotenv
 import random
+
+import praw
 import discord
 from discord.ext import commands
+from dotenv import load_dotenv
+
+from src.cogs.base import BaseCog
 
 load_dotenv()
 
 
-class Reddit(commands.Cog):
+class Reddit(BaseCog):
     def __init__(self, bot):
-        self.bot = bot
+        super().__init__(bot)
         self.reddit = praw.Reddit(
             client_id = os.getenv("CLIENT_REDDIT_API"),
             client_secret = os.getenv("SECRET_REDDIT_API"),
             user_agent="klen4k-bot (by u/Alarming_State8450)"
         )
+
 
     @commands.hybrid_command(
         name = 'top',
@@ -58,7 +62,6 @@ class Reddit(commands.Cog):
 
         except Exception as e:
             await ctx.send(f"❌ Помилка: `{e}`")
-
 
 
 async def setup(bot):

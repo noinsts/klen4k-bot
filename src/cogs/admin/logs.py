@@ -1,29 +1,12 @@
-import os
-import json
-
 import discord
 from discord.ext import commands
 
-from src.database import Database
-
-CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.json')
+from src.cogs.base import BaseCog
 
 
-class Config:
-    def __init__(self, config_path=CONFIG_PATH):
-        with open(config_path, 'r') as f:
-            self._config = json.load(f)
-
-    def __getattr__(self, name):
-        return self._config.get(name)
-    
-cfg = Config()
-
-
-class Logs(commands.Cog):
+class Logs(BaseCog):
     def __init__(self, bot):
-        self.bot = bot
-        self.db = Database()
+        super().__init__(bot)
 
     """Запит дозволу відображати логи"""
 

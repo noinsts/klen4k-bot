@@ -1,13 +1,16 @@
-import  wikipediaapi
+import wikipediaapi
 
 import discord
 from discord.ext import commands
 
+from src.cogs.base import BaseCog
 
-class Wikipedia(commands.Cog):
+
+class Wikipedia(BaseCog):
     def __init__(self, bot):
-        self.bot = bot
+        super().__init__(bot)
         self.wiki = wikipediaapi.Wikipedia(user_agent="klen4k-bot (contact: @noinsts (github))", language="uk")
+
 
     @commands.hybrid_command(
         name = 'search',

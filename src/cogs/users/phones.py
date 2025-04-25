@@ -1,13 +1,12 @@
 import discord
 from discord.ext import commands
 
-from src.database import Database
+from src.cogs.base import BaseCog
 
 
-class Phones(commands.Cog):
+class Phones(BaseCog):
     def __init__(self, bot):
-        self.bot = bot
-        self.db = Database()
+        super().__init__(bot)
 
 
     @commands.hybrid_command(

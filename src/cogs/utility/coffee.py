@@ -2,13 +2,14 @@ import discord
 from discord import Interaction
 from discord.ext import commands
 from discord.ui import View, Button
-from src.database import Database
+
+from src.cogs.base import BaseCog
 
 
-class Coffee(commands.Cog):
+class Coffee(BaseCog):
     def __init__(self, bot):
-        self.bot = bot 
-        self.db = Database()
+        super().__init__(bot)
+
 
     @commands.hybrid_command(
         name = 'coffee_menu',
@@ -44,6 +45,7 @@ class CoffeeView(discord.ui.View):
         coffee_type = interaction.data['custom_id']
         await interaction.response.send_message(f"Готуємо {coffee_type}... ☕\n{self.coffee_info[coffee_type]}", ephemeral=True)
         return True
+
 
 async def setup(bot):
     await bot.add_cog(Coffee(bot))

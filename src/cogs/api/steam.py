@@ -1,27 +1,29 @@
 import os
 
+import requests
 import discord
 from discord.ext import commands
-
-import requests
-
 from dotenv import load_dotenv
+
+from src.cogs.base import BaseCog
 
 load_dotenv()
 
 
-class Steam(commands.Cog):
+class Steam(BaseCog):
 	def __init__(self, bot):
-		self.bot = bot
+		super().__init__(bot)
 
 
-	def get_steam_id(self, username):
+	@staticmethod
+	def get_steam_id(username):
 		url = f"https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key={os.getenv("API_KEY")}&vanityurl={username}"
 		response = requests.get(url).json()
 		return response["response"].get("steamid")
 
 
-	def get_player_info(self, steam_id):
+	@staticmethod
+	def get_player_info(steam_id):
 		url = f"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={os.getenv("API_KEY")}&steamids={steam_id}"
 		response = requests.get(url).json()
 		players = response["response"]["players"]
@@ -46,7 +48,6 @@ class Steam(commands.Cog):
 		embed.add_field(name='Статус', value = 'Онлайн' if player_info["personastate"] == 1 else "Офлайн", inline = False)
 
 		await ctx.send(embed=embed)
-
 
 
 async def setup(bot):
