@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 from src.db.database import Database
-from utils import JSONLoader, setup_logger
+from src.utils import JSONLoader, setup_logger
 
 class BaseCog(commands.Cog):
     def __init__(self, bot):
