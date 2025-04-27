@@ -3,7 +3,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-from src.utils.logger import setup_logger
+from src.utils import setup_logger
 
 
 class BotClient(commands.Bot):

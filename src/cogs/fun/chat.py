@@ -3,7 +3,7 @@ import random
 import discord
 from discord.ext import commands
 
-from src.cogs.base import BaseCog
+from ..base import BaseCog
 
 class Chat(BaseCog):
 	def __init__(self, bot):

@@ -7,7 +7,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 
-from src.cogs.base import BaseCog
+from ..base import BaseCog
 
 
 class Weather(BaseCog):

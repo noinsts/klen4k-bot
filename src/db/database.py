@@ -1,14 +1,6 @@
-from src.db.base import DatabaseConnection
+from .base import DatabaseConnection
 
-from src.db.models.auction import AuctionModel
-from src.db.models.balance import BalanceModel
-from src.db.models.birthdays import BirthdayModel
-from src.db.models.colors import ColorModel
-from src.db.models.location import LocationModel
-from src.db.models.logs import LogsModel
-from src.db.models.phones import PhoneModel
-from src.db.models.taxes import TaxModel
-from src.db.models.weather_advices import WeatherAdviceModel
+from .models import *
 
 
 class Database:

@@ -4,7 +4,7 @@ import discord
 import asyncio
 from discord.ext import commands
 
-from src.cogs.base import BaseCog
+from ..base import BaseCog
 
 
 class Moderation(BaseCog):

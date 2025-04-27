@@ -3,7 +3,7 @@ from discord import Interaction
 from discord.ext import commands
 from discord.ui import View, Button
 
-from src.cogs.base import BaseCog
+from ..base import BaseCog
 
 
 class Coffee(BaseCog):
